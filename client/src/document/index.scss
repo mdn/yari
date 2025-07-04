@@ -998,6 +998,10 @@ html[lang="fr"] a.only-in-en-us:after {
   content: "(angl.)";
 }
 
+html[lang="it"] a.only-in-en-us:after {
+  content: "(ingl.)";
+}
+
 html[lang="ja"] a.only-in-en-us:after {
   content: "(英語)";
 }

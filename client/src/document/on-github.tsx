@@ -35,14 +35,14 @@ const METADATA_TEMPLATE = `
 function fillMetadata(string, doc) {
   let { folder, github_url, last_commit_url } = doc.source;
 
-  if (doc.locale === "de") {
+  if (doc.locale === "de" || doc.locale === "it") {
     github_url = github_url.replace(
       "/translated-content/",
-      "/translated-content-de/"
+      `/translated-content-${doc.locale}/`
     );
     last_commit_url = last_commit_url.replace(
       "/translated-content/",
-      "/translated-content-de/"
+      `/translated-content-${doc.locale}/`
     );
   }
 
@@ -74,8 +74,8 @@ function NewIssueOnGitHubLink({
       ? "/mdn/translated-content/issues/new"
       : "/mdn/content/issues/new";
 
-  if (locale === "de") {
-    url.pathname = "/mdn/translated-content-de/issues/new";
+  if (doc.locale === "de" || doc.locale === "it") {
+    url.pathname = `/mdn/translated-content-${doc.locale}/issues/new`;
   }
 
   sp.set(
@@ -85,6 +85,9 @@ function NewIssueOnGitHubLink({
       : "page-report.yml"
   );
   sp.set("mdn-url", `https://developer.mozilla.org${doc.mdn_url}`);
+  if (doc.locale === "it") {
+    sp.set("mdn-url", `https://developer.allizom.org${doc.mdn_url}`);
+  }
   sp.set("metadata", fillMetadata(METADATA_TEMPLATE, doc));
 
   url.search = sp.toString();
@@ -110,10 +113,10 @@ function SourceOnGitHubLink({
 }) {
   let { github_url, folder } = doc.source;
 
-  if (doc.locale === "de") {
+  if (doc.locale === "de" || doc.locale === "it") {
     github_url = github_url.replace(
       "/translated-content/",
-      "/translated-content-de/"
+      `/translated-content-${doc.locale}/`
     );
   }
 
