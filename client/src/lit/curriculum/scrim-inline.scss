@@ -119,7 +119,7 @@ dialog {
   font: 400 0.8rem /1.8 var(--font-body);
   grid-template-columns: 1fr auto;
   grid-template-rows: auto 1fr;
-  min-height: 7.2rem;
+  min-height: 7rem;
   padding: var(--button-padding);
 
   .context-text {
@@ -214,7 +214,7 @@ dialog {
   font-size: 1rem;
   grid-column: 1 / -1; /* span both columns */
   grid-row: 2;
-  margin: auto;
+  margin: 3rem auto;
 }
 
 dialog[open] .survey {
