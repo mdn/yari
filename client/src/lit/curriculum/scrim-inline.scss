@@ -112,12 +112,13 @@ dialog {
   --button-padding: 0.5rem;
   --button-color: var(--text-primary);
 
+  background-color: var(--background-secondary);
+
   display: grid;
+
+  font: 400 0.8rem /1.8 var(--font-body);
   grid-template-columns: 1fr auto;
   grid-template-rows: auto 1fr;
-
-  background-color: var(--background-secondary);
-  font: 400 0.8rem /1.8 var(--font-body);
   min-height: 7rem;
   padding: var(--button-padding);
 
@@ -129,6 +130,7 @@ dialog {
   fieldset {
     grid-column: 1 / -1; /* span both columns */
     grid-row: 2;
+
     label {
       display: block;
       font-size: 1rem;
@@ -176,13 +178,15 @@ dialog {
 
     &.hide-survey {
       border: none;
-      padding: 0;
       grid-column: 2;
       grid-row: 1;
+      padding: 0;
+
       &:hover,
       &:active {
         background-color: var(--button-secondary-hover);
       }
+
       .icon {
         --size: var(--icon-size, 1rem);
         background-color: var(--text-secondary);
@@ -207,9 +211,9 @@ dialog {
 }
 
 .voted {
+  font-size: 1rem;
   grid-column: 1 / -1; /* span both columns */
   grid-row: 2;
-  font-size: 1rem;
   margin: 3rem auto;
 }
 
