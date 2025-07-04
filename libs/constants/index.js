@@ -1,17 +1,7 @@
 export const VALID_LOCALES = new Map(
-  [
-    "de",
-    "en-US",
-    "es",
-    "fr",
-    "it",
-    "ja",
-    "ko",
-    "pt-BR",
-    "ru",
-    "zh-CN",
-    "zh-TW",
-  ].map((x) => [x.toLowerCase(), x])
+  ["de", "en-US", "es", "fr", "ja", "ko", "pt-BR", "ru", "zh-CN", "zh-TW"].map(
+    (x) => [x.toLowerCase(), x]
+  )
 );
 
 export const RETIRED_LOCALES = new Map(
@@ -27,6 +17,7 @@ export const RETIRED_LOCALES = new Map(
     "hi-IN",
     "hu",
     "id",
+    "it",
     "kab",
     "ms",
     "my",
@@ -61,7 +52,6 @@ export const ACTIVE_LOCALES = new Set([
   "en-us",
   "es",
   "fr",
-  "it",
   "ja",
   "ko",
   "pt-br",

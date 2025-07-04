@@ -60,7 +60,7 @@ permissions:
 
 jobs:
   trigger:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     # When run from `main` branch (schedule or manual), trigger workflow on `next` branch instead.
     if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'main'  }}
@@ -95,13 +95,13 @@ jobs:
           fetch-depth: 0
           path: mdn/yari
 
-      - name: Merge yari main
+      - name: Merge main
         working-directory: mdn/yari
         run: |
           git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
           git config --global user.name "mdn-bot"
           git status
-          git pull --no-rebase
+          git pull
           git checkout main
           git status
           git checkout -
@@ -118,18 +118,6 @@ jobs:
           # but for now it's good enough. We'll need all the history
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
-
-      - name: Merge content next
-        working-directory: mdn/content
-        run: |
-          git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
-          git config --global user.name "mdn-bot"
-          git status
-          git pull --no-rebase
-          git checkout next
-          git status
-          git checkout -
-          git merge next --no-edit || git merge --abort
 
       - name: Checkout (mdn-studio)
         uses: actions/checkout@v4
@@ -170,27 +158,18 @@ jobs:
           repository: mdn/translated-content-de
           path: mdn/translated-content-de
 
-      - name: Checkout (translated-content-it)
-        uses: actions/checkout@v4
-        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
-        with:
-          repository: mdn/translated-content-it
-          path: mdn/translated-content-it
-
-      - name: Merge separate locales into translated-content
+      - name: Move de into translated-content
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         run: |
           mv mdn/translated-content-de/files/de mdn/translated-content/files/
           rm -rf mdn/translated-content-de
-          mv mdn/translated-content-it/files/it mdn/translated-content/files/
-          rm -rf mdn/translated-content-it
 
-      - name: Clean and commit de/it
+      - name: Clean and commit de
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         working-directory: mdn/translated-content
         run: |
-          git add files/de files/it
-          git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de/it'
+          git add files/de
+          git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de'
 
       - name: Checkout (mdn-contributor-spotlight)
         uses: actions/checkout@v4
@@ -212,37 +191,6 @@ jobs:
         env:
           # Use a GITHUB_TOKEN to bypass rate limiting for rari.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: actions/checkout@v4
-        if: ${{ ! vars.SKIP_BUILD }}
-        with:
-          repository: mdn/rari
-          path: mdn/rari
-          ref: italian
-
-      - name: Cache Cargo registry
-        if: ${{ ! vars.SKIP_BUILD }}
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
-
-      - uses: dtolnay/rust-toolchain@stable
-        if: ${{ ! vars.SKIP_BUILD }}
-
-      - name: sccache-cache
-        if: ${{ ! vars.SKIP_BUILD }}
-        uses: mozilla-actions/sccache-action@v0.0.9
-
-      - name: Build rari
-        if: ${{ ! vars.SKIP_BUILD }}
-        run: |
-          cd mdn/rari
-          cargo build --release
-          cp target/release/rari ${{ github.workspace }}/mdn/yari/node_modules/@mdn/rari/bin/
 
       - name: Install Python
         if: ${{ ! vars.SKIP_BUILD }}
@@ -272,6 +220,9 @@ jobs:
           echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}"
           echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}"
 
+      - name: Print information about CPU
+        run: cat /proc/cpuinfo
+
       - name: Build everything
         if: ${{ ! vars.SKIP_BUILD }}
         working-directory: mdn/yari
@@ -290,7 +241,7 @@ jobs:
           BUILD_OUT_ROOT: "client/build"
           LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
           INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
-          ADDITIONAL_LOCALES_FOR_GENERICS_AND_SPAS: de,it
+          ADDITIONAL_LOCALES_FOR_GENERICS_AND_SPAS: de
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -395,9 +346,8 @@ jobs:
           yarn tool:legacy whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
           yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
 
-          # Sort DE/IT search indices by en-US popularity.
+          # Sort DE search index by en-US popularity.
           node scripts/reorder-search-index.mjs client/build/en-us/search-index.json client/build/de/search-index.json
-          node scripts/reorder-search-index.mjs client/build/en-us/search-index.json client/build/it/search-index.json
 
       - name: Update search index
         if: ${{ ! vars.SKIP_BUILD }}

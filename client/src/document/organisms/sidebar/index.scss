@@ -116,12 +116,6 @@
   summary {
     cursor: pointer;
     font-size: var(--type-smaller-font-size);
-    text-wrap: nowrap;
-
-    > a {
-      text-wrap: balance;
-      vertical-align: middle;
-    }
   }
 
   code {

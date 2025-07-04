@@ -32,15 +32,6 @@ export function LocalizedContentNote({
         "Cette page a été traduite à partir de l'anglais par la communauté. Vous pouvez également contribuer en rejoignant la communauté francophone sur MDN Web Docs.",
       url: "/fr/docs/MDN/Community/Contributing/Translated_content#langues_actives",
     },
-    it: {
-      linkText: (
-        <>
-          <strong>Esperimento</strong>: Questa pagina è stata tradotta
-          automaticamente dall'inglese e potrebbe contenere errori.
-        </>
-      ),
-      url: "https://github.com/mdn/translated-content-it?tab=readme-ov-file#readme",
-    },
     ja: {
       linkText:
         "このページはコミュニティーの尽力で英語から翻訳されました。MDN Web Docs コミュニティーについてもっと知り、仲間になるにはこちらから。",
