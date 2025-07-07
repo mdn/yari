@@ -114,6 +114,9 @@ export const CSP_DIRECTIVES = {
     "https://*.analytics.google.com",
     "https://*.googletagmanager.com",
 
+    // Glean
+    "https://incoming.telemetry.mozilla.org",
+
     // Observatory
     "https://observatory-api.mdn.allizom.net",
     "https://observatory-api.mdn.mozilla.net",
@@ -199,7 +202,7 @@ export const CSP_VALUE = cspToString(CSP_DIRECTIVES);
 // Always update client/src/setupProxy.js when adding/removing extensions, or it won't work on the dev server!
 export const AUDIO_EXT = ["mp3", "ogg"];
 export const FONT_EXT = ["woff2"];
-export const BINARY_IMAGE_EXT = ["gif", "jpeg", "jpg", "png", "webp"];
+export const BINARY_IMAGE_EXT = ["gif", "jpeg", "jpg", "png", "webp", "avif"];
 export const ANY_IMAGE_EXT = ["svg", ...BINARY_IMAGE_EXT];
 export const VIDEO_EXT = ["mp4", "webm"];
 

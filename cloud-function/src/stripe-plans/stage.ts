@@ -51,13 +51,6 @@ const plans: LookupData = {
       },
       defaultLanguage: "en",
     },
-    PR: {
-      currency: "usd",
-      supportedLanguages: {
-        en: null,
-      },
-      defaultLanguage: "en",
-    },
     SG: {
       currency: "usd",
       supportedLanguages: {

@@ -11,6 +11,7 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(dirname, "..", "..");
 dotenv.config({
   path: path.join(root, process.env["ENV_FILE"] || ".env"),
+  quiet: true,
 });
 
 function buildRedirectsMap() {

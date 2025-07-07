@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 import paths from "./paths.js";
 
 // Double-check to make sure NODE_ENV is defined
@@ -18,6 +18,7 @@ const dotenvFile = ENV_FILE
 
 dotenv.config({
   path: dotenvFile,
+  quiet: true,
 });
 
 // We support resolving modules according to `NODE_PATH`.

@@ -78,7 +78,10 @@ router.get(
 );
 // Attachments.
 router.get(
-  `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
+  [
+    `/[^/]+/docs/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
+    `/[^/]+/blog/*/*.(${ANY_ATTACHMENT_EXT.join("|")})`,
+  ],
   requireOrigin(Origin.main, Origin.liveSamples, Origin.play),
   resolveIndexHTML,
   proxyContentAssets

@@ -81,11 +81,10 @@ export class ScrimInline extends LitElement {
         <div class="inner">
           <div class="header">
             <span>Clicking will load content from scrimba.com</span>
-            <button
-              tabindex="0"
-              @click=${this.#toggle}
-              class="toggle ${this._fullscreen ? "exit" : "enter"}"
-            >
+            <button tabindex="0" @click=${this.#toggle} class="toggle">
+              <div
+                class="scrim-fullscreen ${this._fullscreen ? "exit" : "enter"}"
+              ></div>
               <span class="visually-hidden">Toggle fullscreen</span>
             </button>
             <a
@@ -95,6 +94,7 @@ export class ScrimInline extends LitElement {
               class="external"
               data-glean="${CURRICULUM}: scrim link id:${this._scrimId}"
             >
+              <div class="scrim-link"></div>
               <span class="visually-hidden">Open on Scrimba</span>
             </a>
           </div>

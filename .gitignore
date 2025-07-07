@@ -101,3 +101,6 @@ client/src/.linaria_cache
 ssr/.linaria-cache/
 
 client/venv
+
+.eslintcache
+.stylelintcache
