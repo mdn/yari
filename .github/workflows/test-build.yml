@@ -214,6 +214,7 @@ jobs:
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
           CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           GENERIC_CONTENT_ROOT: ${{ github.workspace }}/mdn/generic-content/files
+          YARI_ROOT: ${{ github.workspace }}/mdn/yari
           BASE_URL: "https://test.developer.allizom.org"
 
           # rari
@@ -297,7 +298,7 @@ jobs:
           node build/ssr.js
           cp -r dist/* out/static/
 
-          cp ../../assets/nonprod/robots.txt out/robots.txt
+          cp "$YARI_ROOT/assets/nonprod/robots.txt" out/robots.txt
 
           # # Generate whatsdeployed files.
           # yarn tool:legacy whatsdeployed --output client/build/_whatsdeployed/code.json
@@ -349,9 +350,10 @@ jobs:
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+          FRED_ROOT: ${{ github.workspace }}/mdn/fred
         run: |
           mkdir -p ../client/build/
-          cp ../mdn/fred/out/sitemap.txt ../client/build/
+          cp "$FRED_ROOT/out/sitemap.txt" ../client/build/
           npm ci
           npm run build-redirects
           npm run build-canonicals
