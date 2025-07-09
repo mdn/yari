@@ -254,6 +254,10 @@
       max-width: 36rem;
       width: 100%;
     }
+
+    scrim-inline[survey] {
+      aspect-ratio: 1.2;
+    }
   }
 
   #specifications + table {
