@@ -88,6 +88,8 @@ export const CSP_SCRIPT_SRC_VALUES = [
   "'sha256-EehWlTYp7Bqy57gDeQttaWKp0ukTTEUKGP44h8GVeik='",
   // - Current hash:
   "'sha256-XNBp89FG76amD8BqrJzyflxOF9PaWPqPqvJfKZPCv7M='",
+  // - Fred hash:
+  "'sha256-08BmP4sJ6fWVQ01Wh4iSh+BTrsfmvOTgpTE81dsP6cM='",
 ];
 export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
