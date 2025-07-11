@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.0.2](https://github.com/mdn/yari/compare/v5.0.1...v5.0.2) (2025-07-11)
+
+
+### Miscellaneous
+
+* **deps-dev:** bump lefthook from 1.12.1 to 1.12.2 ([#13295](https://github.com/mdn/yari/issues/13295)) ([c5a28e3](https://github.com/mdn/yari/commit/c5a28e3b43145cb3ea4bcf4eed97d7175aed5b1f))
+* **deps-dev:** bump webpack from 5.100.0 to 5.100.1 in /client/pwa ([#13297](https://github.com/mdn/yari/issues/13297)) ([6889898](https://github.com/mdn/yari/commit/688989811201d5df15c245091763689ef9e93e6b))
+* **deps:** bump @lit/react from 1.0.7 to 1.0.8 ([#13294](https://github.com/mdn/yari/issues/13294)) ([5ac574b](https://github.com/mdn/yari/commit/5ac574b19f1deb4fa242e13f5fa960c8e8939351))
+* **deps:** bump @lit/task from 1.0.2 to 1.0.3 ([#13293](https://github.com/mdn/yari/issues/13293)) ([0547804](https://github.com/mdn/yari/commit/05478040c27a536f47a7b71e84bf31e8aa0abbaa))
+* **deps:** bump @mdn/rari from 0.1.45 to 0.1.46 ([#13291](https://github.com/mdn/yari/issues/13291)) ([42377fb](https://github.com/mdn/yari/commit/42377fbda3eea858492ec273dce83337a3aa2756))
+* **deps:** bump lit from 3.3.0 to 3.3.1 ([#13296](https://github.com/mdn/yari/issues/13296)) ([f877368](https://github.com/mdn/yari/commit/f8773682464b2b0c53ceea7b74d3532124d54ba9))
+* **deps:** bump openai from 5.8.2 to 5.9.0 ([#13290](https://github.com/mdn/yari/issues/13290)) ([3407969](https://github.com/mdn/yari/commit/34079690a09683618ddb7cb4c5a57241d9621e85))
+
 ## [5.0.1](https://github.com/mdn/yari/compare/v5.0.0...v5.0.1) (2025-07-10)
 
 
