@@ -83,7 +83,7 @@
     "@fast-csv/parse": "^5.0.2",
     "@inquirer/prompts": "^7.6.0",
     "@lit/react": "^1.0.7",
-    "@lit/task": "^1.0.2",
+    "@lit/task": "^1.0.3",
     "@mdn/bcd-utils-api": "^0.0.8",
     "@mdn/browser-compat-data": "^6.0.28",
     "@mdn/minimalist": "^2.0.4",
