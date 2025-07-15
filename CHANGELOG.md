@@ -1,5 +1,33 @@
 # Changelog
 
+## [5.0.1](https://github.com/mdn/yari/compare/v5.0.0...v5.0.1) (2025-07-10)
+
+
+### Bug Fixes
+
+* **plus:** replace ads free "Get started" link ([#13270](https://github.com/mdn/yari/issues/13270)) ([7c1d152](https://github.com/mdn/yari/commit/7c1d15258a75613320098644d333eef2c0a3cf18))
+
+
+### Enhancements
+
+* **scrim:** survey option for the scrim component ([b73585b](https://github.com/mdn/yari/commit/b73585b94a5a576bde44b05a92f81945509b7398))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.12.9 to 1.12.11 ([#13278](https://github.com/mdn/yari/issues/13278)) ([d9aa5c3](https://github.com/mdn/yari/commit/d9aa5c38d442129a12434f0d919dd24caaba012d))
+* **deps-dev:** bump babel-jest from 30.0.2 to 30.0.4 ([#13261](https://github.com/mdn/yari/issues/13261)) ([6c45fb2](https://github.com/mdn/yari/commit/6c45fb208192a31607d91635e7f72829474f2aaa))
+* **deps-dev:** bump eslint-plugin-n from 17.20.0 to 17.21.0 ([#13267](https://github.com/mdn/yari/issues/13267)) ([c7a1aca](https://github.com/mdn/yari/commit/c7a1aca4d092b8123ad34448c462897982fc8c18))
+* **deps-dev:** bump jest-environment-jsdom from 30.0.2 to 30.0.4 ([#13265](https://github.com/mdn/yari/issues/13265)) ([3846972](https://github.com/mdn/yari/commit/3846972503a3cb9c0d64d02f545c158543677df8))
+* **deps-dev:** bump lefthook from 1.11.15 to 1.11.16 ([#13269](https://github.com/mdn/yari/issues/13269)) ([90c50f4](https://github.com/mdn/yari/commit/90c50f4930d616a396597994708dde598c7c39dd))
+* **deps-dev:** bump lefthook from 1.11.16 to 1.12.1 ([#13284](https://github.com/mdn/yari/issues/13284)) ([d2770d9](https://github.com/mdn/yari/commit/d2770d96c2ec6bb1b7b76dbd5281ca26bc1e6180))
+* **deps-dev:** bump prettier-plugin-packagejson from 2.5.17 to 2.5.18 ([#13268](https://github.com/mdn/yari/issues/13268)) ([b2ac28e](https://github.com/mdn/yari/commit/b2ac28e9e9f04c749ba17f6616c912fd4c9d0dc8))
+* **deps-dev:** bump typescript-eslint from 8.35.1 to 8.36.0 ([#13279](https://github.com/mdn/yari/issues/13279)) ([e53bdc6](https://github.com/mdn/yari/commit/e53bdc6eba9f94bf0bdad99d0bd2ae3245ac3c70))
+* **deps-dev:** bump webpack from 5.99.9 to 5.100.0 in /client/pwa ([#13285](https://github.com/mdn/yari/issues/13285)) ([186a773](https://github.com/mdn/yari/commit/186a773a3f805a4f1d33528e7e7984022eaf78aa))
+* **deps:** bump dotenv from 17.0.1 to 17.2.0 ([#13288](https://github.com/mdn/yari/issues/13288)) ([32f0412](https://github.com/mdn/yari/commit/32f041223d4073902a00970cb9e0a589b2a0937c))
+* **deps:** bump is-svg from 6.0.0 to 6.1.0 ([#13281](https://github.com/mdn/yari/issues/13281)) ([eb98f22](https://github.com/mdn/yari/commit/eb98f228621fc3395aed07de3ce3dd2ad07a2b1a))
+* **deps:** bump selectolax from 0.3.30 to 0.3.31 in /deployer in the dependencies group ([#13273](https://github.com/mdn/yari/issues/13273)) ([510f44b](https://github.com/mdn/yari/commit/510f44b630a2a4e39d8e26b7dbb59d9172430b3c))
+
 ## [5.0.0](https://github.com/mdn/yari/compare/v4.12.6...v5.0.0) (2025-07-03)
 
 

@@ -4,6 +4,9 @@ env:
   DEFAULT_NOTES: ""
 
 on:
+  schedule:
+    - cron: "0 0 * * *"
+
   workflow_dispatch:
     inputs:
       rari-ref:
@@ -44,12 +47,23 @@ permissions:
   id-token: write
 
 jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    # When run from `main` branch (schedule or manual), trigger workflow on `test` branch instead.
+    if: github.repository == 'mdn/yari' && github.ref_name == 'main'
+
+    steps:
+      - run: gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}" --ref "test"
+        env:
+          GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
+
   build:
     environment: test
     runs-on: macos-latest
 
-    # Only run the scheduled workflows on the main repo.
-    if: github.repository == 'mdn/yari'
+    # When run from `main` branch, only trigger workflow on `test` branch (see above).
+    if: github.repository == 'mdn/yari' && github.ref_name != 'main'
 
     steps:
       - name: Print information about build
@@ -63,7 +77,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           path: mdn/yari
+
+      - name: Merge main (if possible)
+        working-directory: mdn/yari
+        run: |
+          git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
+          git config --global user.name "mdn-bot"
+          git status
+          git pull
+          git checkout main
+          git status
+          git checkout -
+          git merge main --no-edit || git merge --abort
 
       - name: Checkout (content)
         uses: actions/checkout@v4
