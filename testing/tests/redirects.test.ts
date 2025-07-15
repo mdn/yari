@@ -1,4 +1,3 @@
-import got from "got";
 import braces from "braces";
 
 function serverURL(pathname = "/") {
@@ -12,13 +11,10 @@ function url_test(from, to, { statusCode = 301 } = {}) {
   return expanded.map((f) => [
     f,
     async () => {
-      const res = await got(serverURL(f), {
-        followRedirect: false,
-        throwHttpErrors: false,
-      });
-      expect(res.statusCode).toBe(statusCode);
+      const res = await fetch(serverURL(f), { redirect: "manual" });
+      expect(res.status).toBe(statusCode);
       if (to) {
-        expect((res.headers.location || "").toLowerCase()).toBe(
+        expect((res.headers.get("location") || "").toLowerCase()).toBe(
           encodeURI(to).toLowerCase()
         );
       }

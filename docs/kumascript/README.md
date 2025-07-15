@@ -115,7 +115,6 @@ KumaScript templates are processed by an
 - Most text is treated as output and included in the output stream.
 - JavaScript variables and expressions can be inserted into the output stream
   with these blocks:
-
   - `<%= expr %>` — the value of a JavaScript expression is escaped for HTML
     before being included in output (e.g., characters like `<` and `>` are
     turned into `&lt;` and `&gt;`).

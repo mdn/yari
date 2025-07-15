@@ -6,12 +6,16 @@ on:
       - deployer/**
       - .github/workflows/pr-deployer.yml
 
+# No GITHUB_TOKEN permissions, as we don't use it.
+permissions: {}
+
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Install Python
         id: setup-python

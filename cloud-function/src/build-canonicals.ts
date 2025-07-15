@@ -2,7 +2,7 @@ import { readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 
 import { normalizePath } from "./utils.js";
 
@@ -11,6 +11,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..", "..");
 dotenv.config({
   path: join(root, process.env["ENV_FILE"] || ".env"),
+  quiet: true,
 });
 
 async function buildCanonicals() {

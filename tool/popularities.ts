@@ -8,12 +8,12 @@
 import fs from "node:fs";
 
 import * as csv from "@fast-csv/parse";
-import got from "got";
 
 const CURRENT_URL = "https://popularities.mdn.mozilla.net/current.csv";
 
 async function fetchPopularities() {
-  const { body: csv } = await got(CURRENT_URL);
+  const response = await fetch(CURRENT_URL);
+  const csv = await response.text();
   return csv;
 }
 

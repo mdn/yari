@@ -3,7 +3,6 @@ import path from "node:path";
 
 import frontmatter from "front-matter";
 import { fdir, PathsOutput } from "fdir";
-import got from "got";
 
 import { m2h } from "../markdown/index.js";
 import * as kumascript from "../kumascript/index.js";
@@ -487,7 +486,8 @@ async function fetchGitHubPRs(repo, count = 5) {
   ].join("+");
   const pullRequestUrl = `https://api.github.com/search/issues?q=${pullRequestsQuery}&per_page=${count}`;
   try {
-    const pullRequestsData = (await got(pullRequestUrl).json()) as {
+    const response = await fetch(pullRequestUrl);
+    const pullRequestsData = (await response.json()) as {
       items: any[];
     };
     const prDataRepo = pullRequestsData.items.map((item) => ({

@@ -22,15 +22,22 @@ export const ORIGIN_MAIN = process.env["ORIGIN_MAIN"] || "localhost";
  */
 
 /**
+ * @param {IncomingMessage} req
  * @param {ServerResponse<IncomingMessage>} res
  */
-export function withRunnerResponseHeaders(res) {
-  [
-    ["X-Content-Type-Options", "nosniff"],
-    ["Clear-Site-Data", '"cache", "cookies", "storage"'],
-    ["Strict-Transport-Security", "max-age=63072000"],
-    ["Content-Security-Policy", PLAYGROUND_UNSAFE_CSP_VALUE],
-  ].forEach(([k, v]) => k && v && res.setHeader(k, v));
+export function withRunnerResponseHeaders(req, res) {
+  const headers = new Headers({
+    "x-content-type-options": "nosniff",
+    // Clear-Site-Data: cache` is slow in Chrome (https://crbug.com/40233601).
+    // See: https://github.com/mdn/yari/issues/12775
+    "clear-site-data": req.headers["user-agent"]?.includes("Chrome/")
+      ? '"cookies", "storage"'
+      : '"cache", "cookies", "storage"',
+    "strict-transport-security": "max-age=63072000",
+    "content-security-policy": PLAYGROUND_UNSAFE_CSP_VALUE,
+  });
+
+  res.setHeaders(headers);
 }
 
 /**
@@ -616,10 +623,9 @@ function playSubdomain(hostname) {
 }
 
 /**
- * @param {URL} referer
+ * @param {string} hostname
  */
-function isMDNReferer(referer) {
-  const { hostname } = referer;
+function isMDNHost(hostname) {
   return (
     hostname === ORIGIN_MAIN ||
     // Review Companion (old/new).
@@ -648,19 +654,45 @@ export async function handleRunner(req, res) {
     "https://example.com"
   );
   const stateParam = url.searchParams.get("state");
+
+  if (!stateParam) {
+    console.warn("[runner] Missing state parameter");
+    return res.status(400).end();
+  }
+
   const { state, hash } = await decompressFromBase64(stateParam);
 
-  const isLocalhost = req.hostname === "localhost";
-  const hasMatchingHash = playSubdomain(req.hostname) === hash;
-  const isIframeOnMDN =
-    isMDNReferer(referer) && req.headers["sec-fetch-dest"] === "iframe";
-
-  if (
-    !stateParam ||
-    !state ||
-    (!isLocalhost && !hasMatchingHash && !isIframeOnMDN)
-  ) {
+  if (!state) {
+    console.warn("[runner] Invalid state value");
     return res.status(404).end();
+  }
+
+  if (req.hostname !== "localhost") {
+    // For security reasons, we only allow the runner:
+    // 1. on localhost (without any restrictions),
+    // 2. if the subdomain matches the hash (for embedded direct links), or
+    // 3. in iframes on MDN.
+    const subdomain = playSubdomain(req.hostname);
+
+    if (subdomain !== hash) {
+      const secFetchDest = req.headers["sec-fetch-dest"];
+
+      if (secFetchDest !== "iframe") {
+        console.warn(
+          `[runner] Disallowed Sec-Fetch-Dest (expected "iframe", was ${JSON.stringify(secFetchDest)})`
+        );
+        return res.status(403).end();
+      }
+
+      const { hostname } = referer;
+
+      if (!isMDNHost(hostname)) {
+        console.warn(
+          `[runner] Disallowed Referer (expected MDN host, was ${JSON.stringify(hostname)})`
+        );
+        return res.status(403).end();
+      }
+    }
   }
 
   const json = JSON.parse(state);
@@ -668,7 +700,7 @@ export async function handleRunner(req, res) {
   const codeCookie = req.cookies["code"];
   if (req.headers["sec-fetch-dest"] === "iframe" || codeParam === codeCookie) {
     const html = renderHtml(json);
-    withRunnerResponseHeaders(res);
+    withRunnerResponseHeaders(req, res);
     return res.status(200).send(html);
   } else {
     const rand = crypto.randomUUID();

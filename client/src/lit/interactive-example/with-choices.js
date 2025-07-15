@@ -32,7 +32,14 @@ export const InteractiveExampleWithChoices = (Base) =>
     }
 
     /** @param {MouseEvent} event  */
-    #choiceClick({ target }) {
+    #choiceFocus({ target }) {
+      if (target instanceof PlayEditor) {
+        target.focus();
+      }
+    }
+
+    /** @param {MouseEvent} event  */
+    #choiceSelect({ target }) {
       if (target instanceof PlayEditor) {
         this.#updateUnsupported(target);
         this.#selectChoice(target);
@@ -102,7 +109,8 @@ export const InteractiveExampleWithChoices = (Base) =>
           </header>
           <div
             class="choice-wrapper"
-            @click=${this.#choiceClick}
+            @click=${this.#choiceFocus}
+            @focus=${this.#choiceSelect}
             @update=${this.#choiceUpdate}
           >
             ${this._choices?.map(

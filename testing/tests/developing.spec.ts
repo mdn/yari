@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test";
-import got from "got";
 
 export {};
 
@@ -71,9 +70,11 @@ test.describe("Testing the kitchensink page", () => {
     test.skip(withDevelop());
 
     // Loading the index.json doesn't require a headless browser
-    const { doc } = await got(
+
+    const response = await fetch(
       serverURL("/en-US/docs/MDN/Kitchensink/index.json")
-    ).json<any>();
+    );
+    const { doc } = await response.json();
 
     expect(doc.title).toBe("The MDN Content Kitchensink");
   });
@@ -87,84 +88,80 @@ test.describe("Testing the Express server", () => {
   test("redirect without any useful headers", async () => {
     test.skip(withDevelop());
 
-    let response = await got(serverURL("/"), { followRedirect: false });
-    expect(response.statusCode).toBe(302);
-    expect(response.headers.location).toBe("/en-US/");
+    let response = await fetch(serverURL("/"), { redirect: "manual" });
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("/en-US/");
 
-    response = await got(serverURL("/docs/Web"), {
-      followRedirect: false,
-    });
-    expect(response.statusCode).toBe(302);
-    expect(response.headers.location).toBe("/en-US/docs/Web");
+    response = await fetch(serverURL("/docs/Web"), { redirect: "manual" });
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("/en-US/docs/Web");
 
     // Trailing slashed
-    response = await got(serverURL("/docs/Web/"), {
-      followRedirect: false,
-    });
-    expect(response.statusCode).toBe(302);
-    expect(response.headers.location).toBe("/en-US/docs/Web");
+    response = await fetch(serverURL("/docs/Web/"), { redirect: "manual" });
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("/en-US/docs/Web");
   });
 
   test("redirect by preferred locale cookie", async () => {
     test.skip(withDevelop());
 
-    let response = await got(serverURL("/"), {
-      followRedirect: false,
+    let response = await fetch(serverURL("/"), {
+      redirect: "manual",
       headers: {
         // Note! Case insensitive
         Cookie: "preferredlocale=zH-cN; foo=bar",
       },
     });
-    expect(response.statusCode).toBe(302);
-    expect(response.headers.location).toBe("/zh-CN/");
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("/zh-CN/");
 
     // Some bogus locale we definitely don't recognized
-    response = await got(serverURL("/"), {
-      followRedirect: false,
+    response = await fetch(serverURL("/"), {
+      redirect: "manual",
       headers: {
         Cookie: "preferredlocale=xyz; foo=bar",
       },
     });
-    expect(response.statusCode).toBe(302);
-    expect(response.headers.location).toBe("/en-US/");
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("/en-US/");
   });
 
   test("redirect by 'Accept-Language' header", async () => {
     test.skip(withDevelop());
 
-    let response = await got(serverURL("/"), {
-      followRedirect: false,
+    let response = await fetch(serverURL("/"), {
+      redirect: "manual",
       headers: {
         // Based on https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language
         "Accept-language": "fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5",
       },
     });
-    expect(response.statusCode).toBe(302);
-    expect(response.headers.location).toBe("/fr/");
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("/fr/");
 
     // Some bogus locale we definitely don't recognized
-    response = await got(serverURL("/"), {
-      followRedirect: false,
+    response = await fetch(serverURL("/"), {
+      redirect: "manual",
       headers: {
         "accept-language": "xyz, X;q=0.9, Y;q=0.8, Z;q=0.7, *;q=0.5",
       },
     });
-    expect(response.statusCode).toBe(302);
-    expect(response.headers.location).toBe("/en-US/");
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("/en-US/");
   });
 
   test("redirect by cookie trumps", async () => {
     test.skip(withDevelop());
 
-    const response = await got(serverURL("/"), {
-      followRedirect: false,
+    const response = await fetch(serverURL("/"), {
+      redirect: "manual",
       headers: {
         Cookie: "preferredlocale=ja",
         "Accept-language": "fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5",
       },
     });
-    expect(response.statusCode).toBe(302);
-    expect(response.headers.location).toBe("/ja/");
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("/ja/");
   });
 });
 

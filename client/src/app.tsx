@@ -37,6 +37,15 @@ import { Newsletter } from "./newsletter";
 import { Curriculum } from "./curriculum";
 import { useGA } from "./ga-context";
 
+if (!("adoptedStyleSheets" in Document.prototype)) {
+  // Polyfill for CSSStyleSheet() constructor etc, mainly for Safari < 16.4.
+  // Required for webpack css-loader exportType "css-style-sheet".
+  // Note: Async import is a compromise, as top-level await requires Safari 15+.
+  import(
+    /* webpackChunkName: "construct-style-sheets-polyfill" */ "construct-style-sheets-polyfill"
+  );
+}
+
 const AllFlaws = React.lazy(() => import("./flaws"));
 const Translations = React.lazy(() => import("./translations"));
 const WritersHomepage = React.lazy(() => import("./writers-homepage"));

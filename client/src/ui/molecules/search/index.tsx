@@ -22,9 +22,11 @@ function useQueryParamState() {
 export function Search({
   id,
   isHomepageSearch,
+  placeholder,
 }: {
   id: string;
   isHomepageSearch?: boolean;
+  placeholder?: string;
 }) {
   const [value, setValue] = useQueryParamState();
   const [isFocused, setIsFocused] = useState(false);
@@ -41,8 +43,9 @@ export function Search({
       },
       defaultSelection,
       onChangeSelection: (selection) => setDefaultSelection(selection),
+      placeholder,
     }),
-    [id, value, isFocused, defaultSelection, setValue]
+    [id, value, isFocused, defaultSelection, placeholder, setValue]
   );
 
   return (

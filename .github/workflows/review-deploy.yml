@@ -34,13 +34,13 @@ jobs:
       - name: Print information about CPU
         run: cat /proc/cpuinfo
 
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: yarn
 
       - name: Prepare Cloud Function
         working-directory: cloud-function
@@ -71,7 +71,7 @@ jobs:
           for region in europe-west3; do
             gcloud beta functions deploy mdn-review-$region \
             --gen2 \
-            --runtime=nodejs20 \
+            --runtime=nodejs22 \
             --region=$region \
             --source=cloud-function \
             --trigger-http \
@@ -84,6 +84,7 @@ jobs:
             --memory=2GB \
             --timeout=120s \
             --run-service-account=run-mdn-review-functions@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com \
+            --set-env-vars="IGNORED_ROUTES=" \
             --set-env-vars="WILDCARD_ENABLED=true" \
             --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/" \
             --set-env-vars="BSA_ENABLED=true" \

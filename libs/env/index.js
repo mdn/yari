@@ -3,7 +3,7 @@ import path from "node:path";
 import { cwd } from "node:process";
 import { fileURLToPath } from "node:url";
 
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 
 import { VALID_FLAW_CHECKS } from "../constants/index.js";
 
@@ -22,6 +22,7 @@ function parse(value) {
 
 dotenv.config({
   path: path.join(cwd(), process.env.ENV_FILE || ".env"),
+  quiet: true,
 });
 
 // -----

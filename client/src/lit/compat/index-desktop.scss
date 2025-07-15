@@ -1,0 +1,123 @@
+@use "../../ui/vars" as *;
+
+// Style for desktop.
+
+@media (min-width: $screen-sm) {
+  .bc-table {
+    // Expand all columns.
+    grid-template-columns: minmax(20vw, min-content) repeat(
+        var(--browser-count),
+        auto
+      );
+
+    thead {
+      display: contents;
+
+      .bc-platforms {
+        th {
+          vertical-align: revert;
+        }
+      }
+    }
+
+    tbody {
+      --border: 1px solid var(--border-secondary);
+
+      // Border.
+      tr {
+        &:not(:first-child) {
+          th,
+          td {
+            > * {
+              border-top: var(--border);
+            }
+          }
+
+          .bc-feature {
+            border-top: var(--border);
+          }
+        }
+
+        th:not(:first-child),
+        td:not(:first-child) {
+          > * {
+            border-left: var(--border);
+          }
+        }
+      }
+    }
+
+    td,
+    th {
+      background: inherit;
+      padding: 0.25rem;
+    }
+
+    td.bc-support {
+      padding: 0;
+
+      > button {
+        padding: 0.25rem;
+      }
+    }
+
+    .timeline {
+      border-left: none !important;
+      border-top: var(--border);
+    }
+
+    .bc-has-history:focus-within > button {
+      // Highlight expanded item.
+      --padding-bottom-offset: -2px;
+      border-bottom: 2px solid var(--text-primary);
+    }
+  }
+
+  .table-container {
+    margin: 0 -3rem;
+    overflow: auto;
+    width: 100vw;
+  }
+
+  .table-container-inner {
+    min-width: max-content;
+    padding: 0 3rem;
+    position: relative;
+
+    &:after {
+      bottom: 0;
+      content: "";
+      height: 10px;
+      position: absolute;
+      right: 0;
+      width: 10px;
+    }
+  }
+
+  .bcd-cell-text-wrapper {
+    .bc-support-level,
+    .bc-browser-name {
+      display: none;
+    }
+  }
+
+  .bc-notes-list {
+    margin-left: 20%;
+    max-width: 80vw;
+    width: auto;
+  }
+
+  .bc-support {
+    .bc-support-level {
+      display: none;
+    }
+  }
+
+  .bc-has-history {
+    cursor: pointer;
+
+    > button:hover {
+      background: var(--background-secondary);
+    }
+  }
+}

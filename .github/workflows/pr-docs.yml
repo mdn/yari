@@ -6,12 +6,17 @@ on:
       - docs/**/*.md
       - README.md
       - .github/workflows/pr-docs.yml
+
+# No GITHUB_TOKEN permissions, as we don't use it.
+permissions: {}
+
 jobs:
   docs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v4

@@ -4,6 +4,9 @@ env:
   DEFAULT_NOTES: ""
 
 on:
+  schedule:
+    - cron: "0 0 * * *"
+
   workflow_dispatch:
     inputs:
       rari-ref:
@@ -44,12 +47,23 @@ permissions:
   id-token: write
 
 jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    # When run from `main` branch (schedule or manual), trigger workflow on `test` branch instead.
+    if: github.repository == 'mdn/yari' && github.ref_name == 'main'
+
+    steps:
+      - run: gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}" --ref "test"
+        env:
+          GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
+
   build:
     environment: test
     runs-on: ubuntu-latest
 
-    # Only run the scheduled workflows on the main repo.
-    if: github.repository == 'mdn/yari'
+    # When run from `main` branch, only trigger workflow on `test` branch (see above).
+    if: github.repository == 'mdn/yari' && github.ref_name != 'main'
 
     steps:
       - name: Print information about build
@@ -60,9 +74,26 @@ jobs:
           echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
           echo "invalidate: ${{ github.event.inputs.invalidate }}"
 
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: mdn/yari
 
-      - uses: actions/checkout@v4
+      - name: Merge main (if possible)
+        working-directory: mdn/yari
+        run: |
+          git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
+          git config --global user.name "mdn-bot"
+          git status
+          git pull
+          git checkout main
+          git status
+          git checkout -
+          git merge main --no-edit || git merge --abort
+
+      - name: Checkout (content)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/content
@@ -74,7 +105,8 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.inputs.content-ref }}
 
-      - uses: actions/checkout@v4
+      - name: Checkout (mdn-studio)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-studio
@@ -82,19 +114,22 @@ jobs:
           lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
-      - uses: actions/checkout@v4
+      - name: Checkout (generic-content)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/generic-content
           path: mdn/generic-content
 
-      - uses: actions/checkout@v4
+      - name: Checkout (curriculum)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/curriculum
           path: mdn/curriculum
 
-      - uses: actions/checkout@v4
+      - name: Checkout (translated-content)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content
@@ -123,7 +158,8 @@ jobs:
           git add files/de
           git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de'
 
-      - uses: actions/checkout@v4
+      - name: Checkout (mdn-contributor-spotlight)
+        uses: actions/checkout@v4
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-contributor-spotlight
@@ -139,7 +175,7 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         uses: actions/setup-node@v4
         with:
-          node-version-file: "mdn/fred/.nvmrc"
+          node-version-file: mdn/fred/.nvmrc
           # cache: ${{ github.event.inputs.rari-ref == '' && 'yarn' || '' }}
 
       # - name: Install all yarn packages
@@ -150,7 +186,8 @@ jobs:
       #     # See https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/checkout@v4
+      - name: Checkout (rari)
+        uses: actions/checkout@v4
         if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
         with:
           repository: mdn/rari
@@ -172,7 +209,7 @@ jobs:
 
       - name: sccache-cache
         if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
-        uses: mozilla-actions/sccache-action@v0.0.8
+        uses: mozilla-actions/sccache-action@v0.0.9
 
       - name: Build rari
         if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
@@ -185,8 +222,8 @@ jobs:
         run: cat /proc/cpuinfo
 
       - name: Build everything
-        working-directory: mdn/fred
         if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/fred
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
@@ -252,6 +289,9 @@ jobs:
 
           # Observatory
           REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.allizom.net
+
+          # Increase GitHub API rate limit.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -eo pipefail
 
@@ -325,7 +365,7 @@ jobs:
 
       - name: Generate redirects map
         if: ${{ ! vars.SKIP_FUNCTION }}
-        working-directory: cloud-function
+        working-directory: mdn/yari/cloud-function
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
@@ -338,13 +378,14 @@ jobs:
 
       - name: Deploy Function
         if: ${{ ! vars.SKIP_FUNCTION }}
+        working-directory: mdn/yari
         run: |-
           set -eo pipefail
 
           for region in europe-west3; do
             gcloud beta functions deploy mdn-nonprod-test-$region \
             --gen2 \
-            --runtime=nodejs20 \
+            --runtime=nodejs22 \
             --region=$region \
             --source=cloud-function \
             --trigger-http \
@@ -356,6 +397,7 @@ jobs:
             --memory=2GB \
             --timeout=120s \
             --run-service-account=run-nonprod-test-functions@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com \
+            --set-env-vars="IGNORED_ROUTES=" \
             --set-env-vars="ORIGIN_MAIN=test.developer.allizom.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live.test.mdnyalp.dev" \
             --set-env-vars="ORIGIN_PLAY=test.mdnyalp.dev" \
