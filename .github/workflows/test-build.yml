@@ -265,6 +265,13 @@ jobs:
           REACT_APP_MDN_PLUS_10M_PLAN: price_1K6X7gKb9q6OnNsLi44HdLcC
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
 
+          # Support for SP3
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL_SP3_BASE: https://payments-next.stage.fxa.nonprod.webservices.mozgcp.net
+          REACT_APP_MDN_PLUS_5M_SP3_ID: mdnplus5mstage
+          REACT_APP_MDN_PLUS_5Y_SP3_ID: mdnplus5ystage
+          REACT_APP_MDN_PLUS_10M_SP3_ID: mdnsupporter10mstage
+          REACT_APP_MDN_PLUS_10Y_SP3_ID: mdnsupporter10ystage
+
           # No surveys.
 
           # Telemetry.
