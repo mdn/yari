@@ -12022,10 +12022,10 @@ open@^10.0.3, open@^10.1.0, open@^10.2.0:
     is-inside-container "^1.0.0"
     wsl-utils "^0.1.0"
 
-openai@^5.9.0:
-  version "5.9.0"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-5.9.0.tgz#fe6109d3dca5be6dd742f7ac54d810a0086d1d37"
-  integrity sha512-cmLC0pfqLLhBGxE4aZPyRPjydgYCncppV2ClQkKmW79hNjCvmzkfhz8rN5/YVDmjVQlFV+UsF1JIuNjNgeagyQ==
+openai@^5.9.2:
+  version "5.9.2"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-5.9.2.tgz#806194d399ccae02aad879dec9bb88ed75ca8adf"
+  integrity sha512-d7t/lRkwZpSwIk7GW3EHRSGAlsuoi1WL6VhCO02raEzZO2ahEVAbWn3WmOcpeh9zF6xF9weJXoVeDkWJRz+SHA==
 
 opener@^1.5.2:
   version "1.5.2"
