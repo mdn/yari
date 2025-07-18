@@ -100,7 +100,7 @@
     "cheerio": "1.0.0-rc.12",
     "cli-progress": "^3.12.0",
     "codemirror": "^6.0.2",
-    "compression": "^1.8.0",
+    "compression": "^1.8.1",
     "compute-baseline": "^0.3.1",
     "concurrently": "^9.2.0",
     "construct-style-sheets-polyfill": "^3.1.0",
