@@ -293,6 +293,8 @@ jobs:
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: test
           REACT_APP_GLEAN_ENABLED: true
+          FRED_GLEAN_CHANNEL: test
+          FRED_GLEAN_ENABLED: true
 
           # Newsletter
           REACT_APP_NEWSLETTER_ENABLED: false
@@ -302,6 +304,7 @@ jobs:
 
           # Playground
           REACT_APP_PLAYGROUND_BASE_HOST: test.mdnyalp.dev
+          FRED_PLAYGROUND_BASE_HOST: test.mdnyalp.dev
 
           # Observatory
           REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.allizom.net
