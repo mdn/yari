@@ -1947,10 +1947,10 @@
     "@inquirer/type" "^3.0.8"
     ansi-escapes "^4.3.2"
 
-"@inquirer/prompts@^7.7.0":
-  version "7.7.0"
-  resolved "https://registry.yarnpkg.com/@inquirer/prompts/-/prompts-7.7.0.tgz#4b45d1f275c603014ba5be19b77355a33c5ffbba"
-  integrity sha512-8/7fOJA/Q5qqxznIvYjEvUCeRE6pncc1OHEmeA5JdNIKfOBC3a0EE5lFBofTWK/WXKfsjMkIz28y/uL6A3frYA==
+"@inquirer/prompts@^7.7.1":
+  version "7.7.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/prompts/-/prompts-7.7.1.tgz#e735651b28c6d6a4f6e90b950d3fbd0ad26d20e8"
+  integrity sha512-XDxPrEWeWUBy8scAXzXuFY45r/q49R0g72bUzgQXZ1DY/xEFX+ESDMkTQolcb5jRBzaNJX2W8XQl6krMNDTjaA==
   dependencies:
     "@inquirer/checkbox" "^4.2.0"
     "@inquirer/confirm" "^5.1.14"
@@ -1961,7 +1961,7 @@
     "@inquirer/password" "^4.0.17"
     "@inquirer/rawlist" "^4.1.5"
     "@inquirer/search" "^3.0.17"
-    "@inquirer/select" "^4.3.0"
+    "@inquirer/select" "^4.3.1"
 
 "@inquirer/rawlist@^4.1.5":
   version "4.1.5"
@@ -1982,10 +1982,10 @@
     "@inquirer/type" "^3.0.8"
     yoctocolors-cjs "^2.1.2"
 
-"@inquirer/select@^4.3.0":
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/@inquirer/select/-/select-4.3.0.tgz#caaf8a8b52660aa2b4924467c80928845cd87b25"
-  integrity sha512-dY4sPBAfGH6Cv435gOSbNbMsLd6v1ItNmhjsLY+LTY4h8L+SAOERL2L/VtvjZFSVpVcY4dcu8fo6Uq8H8vNvzQ==
+"@inquirer/select@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@inquirer/select/-/select-4.3.1.tgz#b49e76dab47f7c729e4e1e520fedc268e5b88cdc"
+  integrity sha512-Gfl/5sqOF5vS/LIrSndFgOh7jgoe0UXEizDqahFRkq5aJBLegZ6WjuMh/hVEJwlFQjyLq1z9fRtvUMkb7jM1LA==
   dependencies:
     "@inquirer/core" "^10.1.15"
     "@inquirer/figures" "^1.0.13"
