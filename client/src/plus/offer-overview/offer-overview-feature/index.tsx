@@ -35,8 +35,8 @@ export default function OfferOverviewFeatures() {
           <p>
             Support MDN and enjoy a focused, ad-free experience alongside other
             features such as curated collections, custom web platform updates,
-            offline access, and more. Subscribers to paid tiers of MDN Plus have
-            the option to browse MDN without ads.
+            and more. Subscribers to paid tiers of MDN Plus have the option to
+            browse MDN without ads.
           </p>
           <Button href="#subscribe">Get started →</Button>
         </section>
