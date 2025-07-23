@@ -2254,22 +2254,22 @@
     jest-haste-map "^29.7.0"
     slash "^3.0.0"
 
-"@jest/transform@30.0.4":
-  version "30.0.4"
-  resolved "https://registry.yarnpkg.com/@jest/transform/-/transform-30.0.4.tgz#a06f8c6fc2a04985241b483096f821bafb99cc93"
-  integrity sha512-atvy4hRph/UxdCIBp+UB2jhEA/jJiUeGZ7QPgBi9jUUKNgi3WEoMXGNG7zbbELG2+88PMabUNCDchmqgJy3ELg==
+"@jest/transform@30.0.5":
+  version "30.0.5"
+  resolved "https://registry.yarnpkg.com/@jest/transform/-/transform-30.0.5.tgz#f8ca2e9f7466b77b406807d3bef1f6790dd384e4"
+  integrity sha512-Vk8amLQCmuZyy6GbBht1Jfo9RSdBtg7Lks+B0PecnjI8J+PCLQPGh7uI8Q/2wwpW2gLdiAfiHNsmekKlywULqg==
   dependencies:
     "@babel/core" "^7.27.4"
-    "@jest/types" "30.0.1"
+    "@jest/types" "30.0.5"
     "@jridgewell/trace-mapping" "^0.3.25"
     babel-plugin-istanbul "^7.0.0"
     chalk "^4.1.2"
     convert-source-map "^2.0.0"
     fast-json-stable-stringify "^2.1.0"
     graceful-fs "^4.2.11"
-    jest-haste-map "30.0.2"
+    jest-haste-map "30.0.5"
     jest-regex-util "30.0.1"
-    jest-util "30.0.2"
+    jest-util "30.0.5"
     micromatch "^4.0.8"
     pirates "^4.0.7"
     slash "^3.0.0"
@@ -4851,12 +4851,12 @@ babel-jest@^29.7.0:
     graceful-fs "^4.2.9"
     slash "^3.0.0"
 
-babel-jest@^30.0.4:
-  version "30.0.4"
-  resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-30.0.4.tgz#63945c1b27227312fc687689073124dba5b28282"
-  integrity sha512-UjG2j7sAOqsp2Xua1mS/e+ekddkSu3wpf4nZUSvXNHuVWdaOUXQ77+uyjJLDE9i0atm5x4kds8K9yb5lRsRtcA==
+babel-jest@^30.0.5:
+  version "30.0.5"
+  resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-30.0.5.tgz#7cc7dd03d0d613125d458521f635b8c2361e89cc"
+  integrity sha512-mRijnKimhGDMsizTvBTWotwNpzrkHr+VvZUQBof2AufXKB8NXrL1W69TG20EvOz7aevx6FTJIaBuBkYxS8zolg==
   dependencies:
-    "@jest/transform" "30.0.4"
+    "@jest/transform" "30.0.5"
     "@types/babel__core" "^7.20.5"
     babel-plugin-istanbul "^7.0.0"
     babel-preset-jest "30.0.1"
