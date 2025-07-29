@@ -2,7 +2,6 @@
 
 ## [5.0.2](https://github.com/mdn/yari/compare/v5.0.1...v5.0.2) (2025-07-24)
 
-
 ### Bug Fixes
 
 * **test-build:** add sp3 env vars ([#13306](https://github.com/mdn/yari/issues/13306)) ([216d3df](https://github.com/mdn/yari/commit/216d3df7c01f74fc9802b15979f22838917f8243))
