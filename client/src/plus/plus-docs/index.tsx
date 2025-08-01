@@ -31,10 +31,6 @@ function PlusDocsNav() {
           slug: "plus/docs/features/collections",
           title: "Collections",
         },
-        {
-          slug: "plus/docs/features/offline",
-          title: "MDN Offline",
-        },
         ...(!userData?.isAuthenticated
           ? [
               {

@@ -4,6 +4,9 @@ env:
   DEFAULT_NOTES: ""
 
 on:
+  schedule:
+    - cron: "0 0 * * *"
+
   workflow_dispatch:
     inputs:
       rari-ref:
@@ -44,12 +47,23 @@ permissions:
   id-token: write
 
 jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    # When run from `main` branch (schedule or manual), trigger workflow on `test` branch instead.
+    if: github.repository == 'mdn/yari' && github.ref_name == 'main'
+
+    steps:
+      - run: gh workflow run "${{ github.workflow }}" --repo "${{ github.repository }}" --ref "test"
+        env:
+          GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
+
   build:
     environment: test
     runs-on: ubuntu-latest
 
-    # Only run the scheduled workflows on the main repo.
-    if: github.repository == 'mdn/yari'
+    # When run from `main` branch, only trigger workflow on `test` branch (see above).
+    if: github.repository == 'mdn/yari' && github.ref_name != 'main'
 
     steps:
       - name: Print information about build
@@ -63,7 +77,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           path: mdn/yari
+
+      - name: Merge main (if possible)
+        working-directory: mdn/yari
+        run: |
+          git config --global user.email "108879845+mdn-bot@users.noreply.github.com"
+          git config --global user.name "mdn-bot"
+          git status
+          git pull
+          git checkout main
+          git status
+          git checkout -
+          git merge main --no-edit || git merge --abort
 
       - name: Checkout (content)
         uses: actions/checkout@v4
@@ -237,6 +264,13 @@ jobs:
           REACT_APP_MDN_PLUS_5Y_PLAN: price_1JpIPwKb9q6OnNsLJLsIqMp7
           REACT_APP_MDN_PLUS_10M_PLAN: price_1K6X7gKb9q6OnNsLi44HdLcC
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
+
+          # Support for SP3
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL_SP3_BASE: https://payments-next.stage.fxa.nonprod.webservices.mozgcp.net
+          REACT_APP_MDN_PLUS_5M_SP3_ID: mdnplus5mstage
+          REACT_APP_MDN_PLUS_5Y_SP3_ID: mdnplus5ystage
+          REACT_APP_MDN_PLUS_10M_SP3_ID: mdnsupporter10mstage
+          REACT_APP_MDN_PLUS_10Y_SP3_ID: mdnsupporter10ystage
 
           # No surveys.
 

@@ -54,7 +54,11 @@ router.get(
   handleRunner
 );
 // Interactive example assets
-router.get("/shared-assets/*", requireOrigin(Origin.play), proxySharedAssets);
+router.get(
+  "/shared-assets/*",
+  requireOrigin(Origin.play, Origin.main, Origin.liveSamples),
+  proxySharedAssets
+);
 // Assets.
 router.get(
   ["/assets/*", "/sitemaps/*", "/static/*", "/[^/]+.[^/]+"],
