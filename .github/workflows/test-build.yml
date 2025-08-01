@@ -60,7 +60,7 @@ jobs:
 
   build:
     environment: test
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     # When run from `main` branch, only trigger workflow on `test` branch (see above).
     if: github.repository == 'mdn/yari' && github.ref_name != 'main'
@@ -176,7 +176,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: mdn/fred/.nvmrc
-          # cache: ${{ github.event.inputs.rari-ref == '' && 'yarn' || '' }}
 
       - name: Install all fred packages
         if: ${{ ! vars.SKIP_BUILD }}
@@ -185,14 +184,6 @@ jobs:
           # Use a GITHUB_TOKEN to bypass rate limiting for rari.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm ci
-
-      # - name: Install all yarn packages
-      #   if: ${{ ! vars.SKIP_BUILD }}
-      #   run: yarn --frozen-lockfile
-      #   env:
-      #     # Use a GITHUB_TOKEN to bypass rate limiting for ripgrep and rari.
-      #     # See https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout (rari)
         uses: actions/checkout@v4
@@ -226,8 +217,8 @@ jobs:
           cargo build --release
           cp target/release/rari ../fred/node_modules/@mdn/rari/bin/
 
-      # - name: Print information about CPU
-      #   run: cat /proc/cpuinfo
+      - name: Print information about CPU
+        run: cat /proc/cpuinfo
 
       - name: Build everything
         if: ${{ ! vars.SKIP_BUILD }}
@@ -249,6 +240,9 @@ jobs:
           LIVE_SAMPLES_BASE_URL: https://live.test.mdnyalp.dev
           INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
           ADDITIONAL_LOCALES_FOR_GENERICS_AND_SPAS: de
+
+          FRED_ROBOTS_GLOBAL_ALLOW: false
+          FRED_BCD_BASE_URL: https://bcd.developer.allizom.org
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -308,6 +302,7 @@ jobs:
 
           # Observatory
           REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.allizom.net
+          FRED_OBSERVATORY_API_URL: https://observatory-api.mdn.allizom.net
 
           # Increase GitHub API rate limit.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -318,17 +313,13 @@ jobs:
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           echo "BLOG_ROOT=$BLOG_ROOT"
-          # # Build the ServiceWorker first
-          # yarn build:sw
-          # yarn build:client
-          # yarn build:ssr
 
           mkdir -p out/static
 
           npm run rari content sync-translated-content
           npm run rari git-history
 
-          npm run rari build -- --all --templ-stats
+          npm run rari build -- --all --issues out/issues.json --templ-stats
 
           # SSR all pages
           npm run build
@@ -337,13 +328,29 @@ jobs:
 
           cp "$YARI_ROOT/assets/nonprod/robots.txt" out/robots.txt
 
-          # # Generate whatsdeployed files.
-          # yarn tool:legacy whatsdeployed --output client/build/_whatsdeployed/code.json
-          # yarn tool:legacy whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
-          # yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+      - name: Install yari yarn packages
+        if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
+        run: yarn --frozen-lockfile
+        env:
+          # Use a GITHUB_TOKEN to bypass rate limiting for rari.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-          # # Sort DE search index by en-US popularity.
-          # node scripts/reorder-search-index.mjs client/build/en-us/search-index.json client/build/de/search-index.json
+      - name: Run yari scripts
+        if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
+        env:
+          FRED_ROOT: ${{ github.workspace }}/mdn/fred
+        run: |
+          set -eo pipefail
+
+          # Generate whatsdeployed files.
+          yarn tool:legacy whatsdeployed --output "$FRED_ROOT/_whatsdeployed/code.json"
+          yarn tool:legacy whatsdeployed $CONTENT_ROOT --output "$FRED_ROOT/_whatsdeployed/content.json"
+          yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output "$FRED_ROOT/_whatsdeployed/translated-content.json"
+
+          # Sort DE search index by en-US popularity.
+          node scripts/reorder-search-index.mjs "$FRED_ROOT/en-us/search-index.json" "$FRED_ROOT/de/search-index.json"
 
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v2
@@ -357,15 +364,10 @@ jobs:
 
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
-        uses: google-github-actions/upload-cloud-storage@v2
-        with:
-          path: mdn/fred/out
-          destination: ${{ vars.GCP_BUCKET_NAME }}/fred
-          parent: false
-          gzip: true
-          resumable: false
-          concurrency: 500
-          process_gcloudignore: true
+        working-directory: mdn/fred
+        run: |-
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r out/static gs://${{ vars.GCP_BUCKET_NAME }}/fred/
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" out gs://${{ vars.GCP_BUCKET_NAME }}/fred
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
