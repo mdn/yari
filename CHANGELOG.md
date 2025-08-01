@@ -1,5 +1,28 @@
 # Changelog
 
+## [5.0.3](https://github.com/mdn/yari/compare/v5.0.2...v5.0.3) (2025-08-01)
+
+
+### Bug Fixes
+
+* **cloud function:** allow main and live samples origin for requests to shared assets ([#13353](https://github.com/mdn/yari/issues/13353)) ([0b63838](https://github.com/mdn/yari/commit/0b63838f9137b1d4f4868b410c04fab63f4bceda))
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @swc/core from 1.13.2 to 1.13.3 ([#13346](https://github.com/mdn/yari/issues/13346)) ([4c8f380](https://github.com/mdn/yari/commit/4c8f380d76fb8cb58d9cb5c14345b62ffe6ff845))
+* **deps-dev:** bump typescript from 5.8.3 to 5.9.2 in /client/pwa ([#13352](https://github.com/mdn/yari/issues/13352)) ([3130520](https://github.com/mdn/yari/commit/313052061bc19f9f67fc1f9ac30d9e15389e79c9))
+* **deps-dev:** bump typescript-eslint from 8.37.0 to 8.38.0 ([#13329](https://github.com/mdn/yari/issues/13329)) ([67920c4](https://github.com/mdn/yari/commit/67920c4dc120a1751ec2c51a15b2b3384416cd75))
+* **deps-dev:** bump webpack from 5.100.2 to 5.101.0 ([#13341](https://github.com/mdn/yari/issues/13341)) ([d94ec06](https://github.com/mdn/yari/commit/d94ec06cec3ef4a87a39dbd2a1ee149dd828bde0))
+* **deps-dev:** bump webpack from 5.100.2 to 5.101.0 in /client/pwa ([#13339](https://github.com/mdn/yari/issues/13339)) ([44cf605](https://github.com/mdn/yari/commit/44cf6052f99264dd837519989f43393ad582f304))
+* **deps:** bump [@zip](https://github.com/zip).js/zip.js from 2.7.68 to 2.7.69 in /client/pwa ([#13338](https://github.com/mdn/yari/issues/13338)) ([f8bb4ed](https://github.com/mdn/yari/commit/f8bb4ed47c2c7ed31fc8d99555edb8a6beb6a2b3))
+* **deps:** bump [@zip](https://github.com/zip).js/zip.js from 2.7.69 to 2.7.70 in /client/pwa ([#13347](https://github.com/mdn/yari/issues/13347)) ([e26a716](https://github.com/mdn/yari/commit/e26a7164ec431a0d92efe530faea427a8fcb9821))
+* **deps:** bump [@zip](https://github.com/zip).js/zip.js from 2.7.70 to 2.7.71 in /client/pwa ([#13351](https://github.com/mdn/yari/issues/13351)) ([93defa5](https://github.com/mdn/yari/commit/93defa564404e3e6357d633b044572d48ca309a0))
+* **deps:** bump @inquirer/prompts from 7.7.1 to 7.8.0 ([#13345](https://github.com/mdn/yari/issues/13345)) ([2c5b9cb](https://github.com/mdn/yari/commit/2c5b9cb9fac5d81ff3087e2fa7e6c29b6c511db5))
+* **deps:** bump @stripe/stripe-js from 7.5.0 to 7.7.0 ([#13343](https://github.com/mdn/yari/issues/13343)) ([1be5589](https://github.com/mdn/yari/commit/1be558918bbe1d2f8fde9df8ed4459ea25874f5e))
+* **deps:** bump form-data from 2.5.1 to 2.5.5 in /libs/pong ([#13324](https://github.com/mdn/yari/issues/13324)) ([4a4bca1](https://github.com/mdn/yari/commit/4a4bca12f47bf5bef0d7c0d8e48c61f6da83e017))
+* **deps:** bump openai from 5.10.1 to 5.11.0 ([#13348](https://github.com/mdn/yari/issues/13348)) ([6f0f4ca](https://github.com/mdn/yari/commit/6f0f4cad18c07f21fd921070a919330733b9db0a))
+
 ## [5.0.2](https://github.com/mdn/yari/compare/v5.0.1...v5.0.2) (2025-07-24)
 
 ### Bug Fixes
