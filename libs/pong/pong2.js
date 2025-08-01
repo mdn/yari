@@ -1,4 +1,3 @@
-/* global fetch */
 import he from "he";
 import anonymousIpByCC from "./cc2ip.js";
 
@@ -35,13 +34,13 @@ export function createPong2GetHandler(zoneKeys, coder) {
     });
 
     const requests = placements.map(async ({ name, zoneKey }) => {
-      const res = await (
-        await fetch(
-          `https://srv.buysellads.com/ads/${zoneKey}.json?forwardedip=${encodeURIComponent(
-            anonymousIp
-          )}${userAgent ? `&useragent=${encodeURIComponent(userAgent)}` : ""}`
-        )
-      ).json();
+      // eslint-disable-next-line n/no-unsupported-features/node-builtins
+      const response = await fetch(
+        `https://srv.buysellads.com/ads/${zoneKey}.json?forwardedip=${encodeURIComponent(
+          anonymousIp
+        )}${userAgent ? `&useragent=${encodeURIComponent(userAgent)}` : ""}`
+      );
+      const res = await response.json();
 
       const {
         ads: [
@@ -51,6 +50,8 @@ export function createPong2GetHandler(zoneKeys, coder) {
             Description,
             Image,
             LargeImage,
+            SkyscraperImage,
+            LeaderboardImage,
             ImageTitle,
             BackgroundColor,
             BackgroundColorLight,
@@ -67,6 +68,17 @@ export function createPong2GetHandler(zoneKeys, coder) {
           },
         ] = [],
       } = res;
+
+      const imageFormat = SkyscraperImage
+        ? "skyscraper"
+        : LeaderboardImage
+          ? "leaderboard"
+          : LargeImage
+            ? "large"
+            : Image
+              ? "image"
+              : "unknown";
+
       return {
         name,
         p:
@@ -75,9 +87,12 @@ export function createPong2GetHandler(zoneKeys, coder) {
             : {
                 click: coder.encodeAndSign(statlink),
                 view: coder.encodeAndSign(statview),
-                image: coder.encodeAndSign(LargeImage || Image),
+                image: coder.encodeAndSign(
+                  SkyscraperImage || LeaderboardImage || LargeImage || Image
+                ),
+                imageFormat,
                 alt: ImageTitle && he.decode(ImageTitle),
-                copy: Description && he.decode(Description),
+                copy: Description && he.decode(Description), // only present on large + image images
                 cta: CallToAction && he.decode(CallToAction),
                 heading: Heading && he.decode(Heading),
                 colors: {
@@ -118,13 +133,24 @@ export function createPong2GetHandler(zoneKeys, coder) {
           if (v === null) {
             return null;
           }
-          const { copy, image, alt, click, view, cta, colors, heading } = v;
+          const {
+            copy,
+            image,
+            imageFormat,
+            alt,
+            click,
+            view,
+            cta,
+            colors,
+            heading,
+          } = v;
           return [
             p,
             {
               status: "success",
               copy,
               image,
+              imageFormat,
               alt,
               cta,
               colors,
@@ -154,6 +180,7 @@ export function createPong2ClickHandler(coder) {
     clickURL.searchParams.set("forwardedip", anonymousIp);
     clickURL.searchParams.set("useragent", userAgent);
 
+    // eslint-disable-next-line n/no-unsupported-features/node-builtins
     const res = await fetch(clickURL, {
       redirect: "manual",
     });
@@ -172,6 +199,7 @@ export function createPong2ViewedHandler(coder) {
       viewURL.searchParams.set("forwardedip", anonymousIp);
       viewURL.searchParams.set("useragent", userAgent);
 
+      // eslint-disable-next-line n/no-unsupported-features/node-builtins
       await fetch(viewURL, {
         redirect: "manual",
       });
