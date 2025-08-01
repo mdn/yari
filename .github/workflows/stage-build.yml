@@ -178,19 +178,25 @@ jobs:
           repository: mdn/mdn-contributor-spotlight
           path: mdn/mdn-contributor-spotlight
 
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/fred
+          path: mdn/fred
+
       - name: Setup Node.js environment
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         uses: actions/setup-node@v4
         with:
-          node-version-file: mdn/yari/.nvmrc
+          node-version-file: mdn/fred/.nvmrc
 
-      - name: Install all yarn packages
+      - name: Install all fred packages
         if: ${{ ! vars.SKIP_BUILD }}
-        working-directory: mdn/yari
-        run: yarn --frozen-lockfile
+        working-directory: mdn/fred
         env:
           # Use a GITHUB_TOKEN to bypass rate limiting for rari.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm ci
 
       - name: Install Python
         if: ${{ ! vars.SKIP_BUILD }}
@@ -225,7 +231,7 @@ jobs:
 
       - name: Build everything
         if: ${{ ! vars.SKIP_BUILD }}
-        working-directory: mdn/yari
+        working-directory: mdn/fred
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
@@ -235,13 +241,17 @@ jobs:
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
           CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           GENERIC_CONTENT_ROOT: ${{ github.workspace }}/mdn/generic-content/files
+          YARI_ROOT: ${{ github.workspace }}/mdn/yari
           BASE_URL: "https://developer.allizom.org"
 
           # rari
-          BUILD_OUT_ROOT: "client/build"
+          BUILD_OUT_ROOT: "out"
           LIVE_SAMPLES_BASE_URL: https://live.mdnyalp.dev
           INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
           ADDITIONAL_LOCALES_FOR_GENERICS_AND_SPAS: de
+
+          FRED_ROBOTS_GLOBAL_ALLOW: false
+          FRED_BCD_BASE_URL: https://bcd.developer.allizom.org
 
           # The default for this environment variable is geared for writers
           # (aka. local development). Usually defaults are supposed to be for
@@ -299,6 +309,8 @@ jobs:
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: stage
           REACT_APP_GLEAN_ENABLED: true
+          FRED_GLEAN_CHANNEL: stage
+          FRED_GLEAN_ENABLED: true
 
           # Newsletter
           REACT_APP_NEWSLETTER_ENABLED: true
@@ -308,9 +320,11 @@ jobs:
 
           # Playground
           REACT_APP_PLAYGROUND_BASE_HOST: mdnyalp.dev
+          FRED_PLAYGROUND_BASE_HOST: mdnyalp.dev
 
           # Observatory
           REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.allizom.net
+          FRED_OBSERVATORY_API_URL: https://observatory-api.mdn.allizom.net
 
           # Sentry.
           SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}
@@ -326,28 +340,44 @@ jobs:
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           echo "BLOG_ROOT=$BLOG_ROOT"
-          # Build the ServiceWorker first
-          yarn build:sw
-          yarn build:client
-          yarn build:ssr
 
-          cp assets/nonprod/robots.txt client/build/robots.txt
+          mkdir -p out/static
 
-          yarn rari content sync-translated-content
-          yarn rari git-history
+          npm run rari content sync-translated-content
+          npm run rari git-history
 
-          yarn rari build --all --issues client/build/issues.json --templ-stats
+          npm run rari build -- --all --issues out/issues.json --templ-stats
 
           # SSR all pages
-          yarn render:html
+          npm run build
+          node build/ssr.js
+          cp -r dist/* out/static/
+
+          cp "$YARI_ROOT/assets/nonprod/robots.txt" out/robots.txt
+
+      - name: Install yari yarn packages
+        if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
+        run: yarn --frozen-lockfile
+        env:
+          # Use a GITHUB_TOKEN to bypass rate limiting for rari.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run yari scripts
+        if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
+        env:
+          FRED_ROOT: ${{ github.workspace }}/mdn/fred
+        run: |
+          set -eo pipefail
 
           # Generate whatsdeployed files.
-          yarn tool:legacy whatsdeployed --output client/build/_whatsdeployed/code.json
-          yarn tool:legacy whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
-          yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+          yarn tool:legacy whatsdeployed --output "$FRED_ROOT/out/_whatsdeployed/code.json"
+          yarn tool:legacy whatsdeployed $CONTENT_ROOT --output "$FRED_ROOT/out/_whatsdeployed/content.json"
+          yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output "$FRED_ROOT/out/_whatsdeployed/translated-content.json"
 
           # Sort DE search index by en-US popularity.
-          node scripts/reorder-search-index.mjs client/build/en-us/search-index.json client/build/de/search-index.json
+          node scripts/reorder-search-index.mjs "$FRED_ROOT/out/en-us/search-index.json" "$FRED_ROOT/out/de/search-index.json"
 
       - name: Update search index
         if: ${{ ! vars.SKIP_BUILD }}
@@ -370,10 +400,10 @@ jobs:
 
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
-        working-directory: mdn/yari
+        working-directory: mdn/fred
         run: |-
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r out/static gs://${{ vars.GCP_BUCKET_NAME }}/fred/
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" out gs://${{ vars.GCP_BUCKET_NAME }}/fred
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
@@ -395,7 +425,10 @@ jobs:
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+          FRED_ROOT: ${{ github.workspace }}/mdn/fred
         run: |
+          mkdir -p ../client/build/
+          cp "$FRED_ROOT/out/sitemap.txt" ../client/build/
           npm ci
           npm run build-redirects
           npm run build-canonicals
@@ -425,7 +458,7 @@ jobs:
             --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnyalp.dev" \
             --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
-            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
+            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/fred/" \
             --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
             --set-env-vars="ORIGIN_TRIAL_TOKEN=AwIRl96ZjeFFEsdas+GXmpHvd3ARcQPYgBIGhQzZtyG9PpESvUi8ea4gpiQq9QsYRsVAWBeeBgBYqp/oLQPna0YAAABfeyJvcmlnaW4iOiJodHRwczovL2RldmVsb3Blci5hbGxpem9tLm9yZyIsImZlYXR1cmUiOiJQcml2YXRlQXR0cmlidXRpb25WMiIsImV4cGlyeSI6MTc0MjA3OTYwMH0=" \
             --set-env-vars="BSA_ENABLED=true" \
