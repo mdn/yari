@@ -345,12 +345,12 @@ jobs:
           set -eo pipefail
 
           # Generate whatsdeployed files.
-          yarn tool:legacy whatsdeployed --output "$FRED_ROOT/_whatsdeployed/code.json"
-          yarn tool:legacy whatsdeployed $CONTENT_ROOT --output "$FRED_ROOT/_whatsdeployed/content.json"
-          yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output "$FRED_ROOT/_whatsdeployed/translated-content.json"
+          yarn tool:legacy whatsdeployed --output "$FRED_ROOT/out/_whatsdeployed/code.json"
+          yarn tool:legacy whatsdeployed $CONTENT_ROOT --output "$FRED_ROOT/out/_whatsdeployed/content.json"
+          yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output "$FRED_ROOT/out/_whatsdeployed/translated-content.json"
 
           # Sort DE search index by en-US popularity.
-          node scripts/reorder-search-index.mjs "$FRED_ROOT/en-us/search-index.json" "$FRED_ROOT/de/search-index.json"
+          node scripts/reorder-search-index.mjs "$FRED_ROOT/out/en-us/search-index.json" "$FRED_ROOT/out/de/search-index.json"
 
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v2
