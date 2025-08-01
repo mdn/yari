@@ -249,10 +249,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zip.js/zip.js@2.7.70":
-  version "2.7.70"
-  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.7.70.tgz#af6d929f698770293ec2bc96cf5743a69eb0524b"
-  integrity sha512-GkUtNfhrfR90xurdCUtFI6yDqlTI70dMolOZuyDAVNxvgn0uv8qvoGzbyYWcfkfTYBKNR4NJs6poQE/cr1pW3A==
+"@zip.js/zip.js@2.7.71":
+  version "2.7.71"
+  resolved "https://registry.yarnpkg.com/@zip.js/zip.js/-/zip.js-2.7.71.tgz#a6e4fc91153b2504d87056097df3cb0dfe075760"
+  integrity sha512-TA6hXQQeOsqJGchrPRaPPt+CScLcS05A/JD03sVTysAUqJ1HungAW5rSqRk23AK9i3Zph5kswrv31rHSEum+Tw==
 
 acorn-import-phases@^1.0.3:
   version "1.0.3"
