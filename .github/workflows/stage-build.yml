@@ -381,7 +381,8 @@ jobs:
         working-directory: mdn/yari/deployer
         env:
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_STAGE_ELASTICSEARCH_URL }}
-        run: poetry run deployer search-index ../client/build
+          FRED_ROOT: ${{ github.workspace }}/mdn/fred
+        run: poetry run deployer search-index "$FRED_ROOT/out"
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_BUILD }}
