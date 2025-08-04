@@ -21,6 +21,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   build:
@@ -40,8 +41,80 @@ jobs:
           fetch-depth: 0
           path: mdn/yari
 
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: mdn/yari/.nvmrc
+
+      - name: Get content commits
+        working-directory: mdn/yari
+        run: |-
+          curl https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/${{ github.event.inputs.deployment_prefix }}/_whatsdeployed/content.json -o content.json
+          curl https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/${{ github.event.inputs.deployment_prefix }}/_whatsdeployed/translated-content.json -o translated-content.json
+
+          content=$(node -e "console.log(JSON.parse(require('fs').readFileSync('content.json','utf-8')).commit)")
+          translated_content=$(node -e "console.log(JSON.parse(require('fs').readFileSync('translated-content.json','utf-8')).commit)")
+
+          echo "CONTENT_REF=$content" >> $GITHUB_ENV
+          echo "TRANSLATED_CONTENT_REF=$content" >> $GITHUB_ENV
+
+      - name: Checkout (content)
+        uses: actions/checkout@v4
+        with:
+          repository: mdn/content
+          path: mdn/content
+          # Yes, this means fetch EVERY COMMIT EVER.
+          # It's probably not sustainable in the far future (e.g. past 2021)
+          # but for now it's good enough. We'll need all the history
+          # so we can figure out each document's last-modified date.
+          fetch-depth: 0
+          ref: ${{ vars.CONTENT_REF }}
+
+      - name: Checkout (translated-content)
+        uses: actions/checkout@v4
+        with:
+          repository: mdn/translated-content
+          path: mdn/translated-content
+          # See matching warning for mdn/content checkout step
+          fetch-depth: 0
+          ref: ${{ vars.TRANSLATED_CONTENT_REF }}
+
+      - name: Checkout (translated-content-de)
+        uses: actions/checkout@v4
+        with:
+          repository: mdn/translated-content-de
+          path: mdn/translated-content-de
+
+      - name: Move de into translated-content
+        run: |
+          mv mdn/translated-content-de/files/de mdn/translated-content/files/
+          rm -rf mdn/translated-content-de
+
+      - name: Install all yarn packages
+        working-directory: mdn/yari
+        run: yarn --frozen-lockfile
+        env:
+          # Use a GITHUB_TOKEN to bypass rate limiting for rari.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download sitemap
+        working-directory: mdn/yari
+        run: |
+          mkdir -p client/build
+          cd client/build
+          curl https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/${{ github.event.inputs.deployment_prefix }}/sitemap.txt -o sitemap.txt
+
+      - name: Generate redirects map
+        working-directory: mdn/yari/cloud-function
+        env:
+          CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
+          CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+        run: |
+          npm ci
+          npm run build-redirects
+          npm run build-canonicals
+
       - name: Authenticate with GCP
-        if: ${{ ! vars.SKIP_FUNCTION }}
         uses: google-github-actions/auth@v2
         with:
           token_format: access_token
@@ -49,13 +122,11 @@ jobs:
           workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
 
       - name: Setup gcloud
-        if: ${{ ! vars.SKIP_FUNCTION }}
         uses: google-github-actions/setup-gcloud@v2
         with:
           install_components: "beta"
 
       - name: Deploy Function
-        if: ${{ ! vars.SKIP_FUNCTION }}
         working-directory: mdn/yari
         run: |-
           set -eo pipefail
