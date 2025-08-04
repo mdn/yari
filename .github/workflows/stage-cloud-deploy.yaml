@@ -1,0 +1,104 @@
+name: Stage Cloud Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      notes:
+        description: "Notes"
+        required: false
+        default: ""
+
+      deployment_prefix:
+        description: "Deployment prefix"
+        required: false
+        default: "main"
+
+      invalidate:
+        description: "Invalidate CDN (use only in exceptional circumstances)"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    environment: stage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print information about deploy
+        run: |
+          echo "notes: ${{ github.event.inputs.notes }}"
+          echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix }}"
+          echo "invalidate: ${{ github.event.inputs.invalidate }}"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: mdn/yari
+
+      - name: Authenticate with GCP
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          service_account: deploy-stage-nonprod-mdn-ingre@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
+          workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+
+      - name: Setup gcloud
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          install_components: "beta"
+
+      - name: Deploy Function
+        if: ${{ ! vars.SKIP_FUNCTION }}
+        working-directory: mdn/yari
+        run: |-
+          set -eo pipefail
+
+          for region in europe-west1 us-west1 asia-east1; do
+            gcloud beta functions deploy mdn-nonprod-stage-$region \
+            --gen2 \
+            --runtime=nodejs22 \
+            --region=$region \
+            --source=cloud-function \
+            --trigger-http \
+            --allow-unauthenticated \
+            --entry-point=mdnHandler \
+            --concurrency=100 \
+            --min-instances=1 \
+            --max-instances=100 \
+            --memory=2GB \
+            --timeout=120s \
+            --run-service-account=run-nonprod-stage-functions@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com \
+            --set-env-vars="IGNORED_ROUTES=" \
+            --set-env-vars="ORIGIN_MAIN=developer.allizom.org" \
+            --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnyalp.dev" \
+            --set-env-vars="ORIGIN_PLAY=mdnyalp.dev" \
+            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/${{ github.event.inputs.deployment_prefix }}/" \
+            --set-env-vars="SOURCE_API=https://api.developer.allizom.org/" \
+            --set-env-vars="ORIGIN_TRIAL_TOKEN=AwIRl96ZjeFFEsdas+GXmpHvd3ARcQPYgBIGhQzZtyG9PpESvUi8ea4gpiQq9QsYRsVAWBeeBgBYqp/oLQPna0YAAABfeyJvcmlnaW4iOiJodHRwczovL2RldmVsb3Blci5hbGxpem9tLm9yZyIsImZlYXR1cmUiOiJQcml2YXRlQXR0cmlidXRpb25WMiIsImV4cGlyeSI6MTc0MjA3OTYwMH0=" \
+            --set-env-vars="BSA_ENABLED=true" \
+            --set-env-vars="SENTRY_DSN=${{ secrets.SENTRY_DSN_CLOUD_FUNCTION }}" \
+            --set-env-vars="SENTRY_ENVIRONMENT=stage" \
+            --set-env-vars="SENTRY_TRACES_SAMPLE_RATE=${{ vars.SENTRY_TRACES_SAMPLE_RATE }}" \
+            --set-env-vars="SENTRY_RELEASE=${{ github.sha }}" \
+            --set-secrets="KEVEL_SITE_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-site-id/versions/latest" \
+            --set-secrets="KEVEL_NETWORK_ID=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-kevel-network-id/versions/latest" \
+            --set-secrets="SIGN_SECRET=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-sign-secret/versions/latest" \
+            --set-secrets="BSA_ZONE_KEYS=projects/${{ secrets.GCP_PROJECT_NAME }}/secrets/stage-bsa-zone-keys/versions/latest" \
+            2>&1 | sed "s/^/[$region] /" &
+            pids+=($!)
+          done
+
+          for pid in "${pids[@]}"; do
+            wait $pid
+          done
+
+      - name: Invalidate CDN
+        if: ${{ github.event.inputs.invalidate }}
+        run: gcloud compute url-maps invalidate-cdn-cache ${{ secrets.GCP_LOAD_BALANCER_NAME }} --path "/*" --async
