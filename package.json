@@ -180,7 +180,7 @@
     "@svgr/webpack": "^8.1.0",
     "@swc/core": "^1.13.3",
     "@testing-library/react": "^15.0.7",
-    "@types/async": "^3.2.24",
+    "@types/async": "^3.2.25",
     "@types/cli-progress": "^3.11.6",
     "@types/he": "^1.2.3",
     "@types/imagemin": "^9.0.1",
