@@ -400,9 +400,9 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD }}
         working-directory: mdn/fred
         run: |-
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r out/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cr out gs://${{ vars.GCP_BUCKET_NAME }}/main/static/ gs://${{ vars.GCP_BUCKET_NAME }}/fred/static/
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" out gs://${{ vars.GCP_BUCKET_NAME }}/fred
+          time gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r out/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
+          time gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cr gs://${{ vars.GCP_BUCKET_NAME }}/main/static/ gs://${{ vars.GCP_BUCKET_NAME }}/fred/static/
+          time gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" out gs://${{ vars.GCP_BUCKET_NAME }}/fred
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
