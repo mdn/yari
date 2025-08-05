@@ -237,7 +237,7 @@
     "jsdom": "^26.1.0",
     "lefthook": "^1.12.2",
     "mdast-util-to-hast": "^13.2.0",
-    "mini-css-extract-plugin": "^2.9.2",
+    "mini-css-extract-plugin": "^2.9.3",
     "node-dev": "^8.0.0",
     "peggy": "^4.2.0",
     "postcss": "^8.5.6",
