@@ -400,7 +400,8 @@ jobs:
         if: ${{ ! vars.SKIP_BUILD }}
         working-directory: mdn/fred
         run: |-
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r out/static gs://${{ vars.GCP_BUCKET_NAME }}/fred/
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r out/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
+          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cr out gs://${{ vars.GCP_BUCKET_NAME }}/main/static/ gs://${{ vars.GCP_BUCKET_NAME }}/fred/static/
           gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" out gs://${{ vars.GCP_BUCKET_NAME }}/fred
 
       - name: Authenticate with GCP
@@ -478,10 +479,11 @@ jobs:
 
       - name: Update AI Help index with macros
         working-directory: mdn/yari
-        run: yarn ai-help-macros update-index
+        run: yarn ai-help-macros update-index "$FRED_ROOT/out/en-us/docs"
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           PG_URI: ${{ secrets.PG_URI }}
+          FRED_ROOT: ${{ github.workspace }}/mdn/fred
 
       - name: Slack Notification
         if: failure()
