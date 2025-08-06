@@ -24,6 +24,11 @@ on:
         type: string
         default: "main"
 
+      fred-ref:
+        description: "fred ref to build"
+        type: string
+        default: "main"
+
       notes:
         description: "Notes"
         required: false
@@ -170,6 +175,7 @@ jobs:
         with:
           repository: mdn/fred
           path: mdn/fred
+          ref: ${{ github.event.inputs.fred-ref }}
 
       - name: Setup Node.js environment
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
