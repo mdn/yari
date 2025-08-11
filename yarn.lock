@@ -15230,10 +15230,10 @@ svgo@^4.0.0:
     picocolors "^1.1.1"
     sax "^1.4.1"
 
-swr@^2.3.4:
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/swr/-/swr-2.3.4.tgz#60bcb5b97cae157a6ef69eff0ed2beb9010eba69"
-  integrity sha512-bYd2lrhc+VarcpkgWclcUi92wYCpOgMws9Sd1hG1ntAu0NEy+14CbotuFjshBU2kt9rYj9TSmDcybpxpeTU1fg==
+swr@^2.3.5:
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-2.3.5.tgz#f83ceab400bc4901420e0bdae8879f96a22254b8"
+  integrity sha512-4e7pjTVulZTIL+b/S0RYFsgDcTcXPLUOvBPqyh9YdD+PkHeEMoaPwDmF9Kv6I1nnPg1OFKhiiEYpsYaaE2W2jA==
   dependencies:
     dequal "^2.0.3"
     use-sync-external-store "^1.4.0"
