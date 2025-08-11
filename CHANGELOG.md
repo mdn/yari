@@ -1,5 +1,46 @@
 # Changelog
 
+## [5.0.3](https://github.com/mdn/yari/compare/v5.0.2...v5.0.3) (2025-08-11)
+
+
+### Bug Fixes
+
+* **cloud function:** allow main and live samples origin for requests to shared assets ([#13353](https://github.com/mdn/yari/issues/13353)) ([0b63838](https://github.com/mdn/yari/commit/0b63838f9137b1d4f4868b410c04fab63f4bceda))
+* **collections:** prevent space-only collection names ([#13360](https://github.com/mdn/yari/issues/13360)) ([55e7b2a](https://github.com/mdn/yari/commit/55e7b2ae0cb1e6de1a4d1cb2bac8cd977f9ebaf7))
+
+
+### Miscellaneous
+
+* add prod-cloud-deploy workflow ([#13369](https://github.com/mdn/yari/issues/13369)) ([9d8bf45](https://github.com/mdn/yari/commit/9d8bf45080409e4f301e19c8762f1e9828a41150))
+* **deps-dev:** bump @swc/core from 1.13.2 to 1.13.3 ([#13346](https://github.com/mdn/yari/issues/13346)) ([4c8f380](https://github.com/mdn/yari/commit/4c8f380d76fb8cb58d9cb5c14345b62ffe6ff845))
+* **deps-dev:** bump @types/async from 3.2.24 to 3.2.25 in the types group ([#13358](https://github.com/mdn/yari/issues/13358)) ([6038fb0](https://github.com/mdn/yari/commit/6038fb043a2bcc3933095337f0381130d0674a8a))
+* **deps-dev:** bump cssnano from 7.0.7 to 7.1.0 ([#13302](https://github.com/mdn/yari/issues/13302)) ([271af85](https://github.com/mdn/yari/commit/271af8508031ecfd2b3380a5c6fa7d1e34d9cb2d))
+* **deps-dev:** bump mini-css-extract-plugin from 2.9.2 to 2.9.3 ([#13364](https://github.com/mdn/yari/issues/13364)) ([20c7528](https://github.com/mdn/yari/commit/20c7528a628d4c1532508f488824fee8756bd630))
+* **deps-dev:** bump sass from 1.89.2 to 1.90.0 ([#13373](https://github.com/mdn/yari/issues/13373)) ([831c749](https://github.com/mdn/yari/commit/831c749d0b01f93d9c04e127a0f996a884d44cc8))
+* **deps-dev:** bump typescript from 5.8.3 to 5.9.2 ([#13371](https://github.com/mdn/yari/issues/13371)) ([e3146fd](https://github.com/mdn/yari/commit/e3146fd85a01e1603a9ca9579887398407905780))
+* **deps-dev:** bump typescript from 5.8.3 to 5.9.2 in /client/pwa ([#13352](https://github.com/mdn/yari/issues/13352)) ([3130520](https://github.com/mdn/yari/commit/313052061bc19f9f67fc1f9ac30d9e15389e79c9))
+* **deps-dev:** bump typescript-eslint from 8.37.0 to 8.38.0 ([#13329](https://github.com/mdn/yari/issues/13329)) ([67920c4](https://github.com/mdn/yari/commit/67920c4dc120a1751ec2c51a15b2b3384416cd75))
+* **deps-dev:** bump typescript-eslint from 8.38.0 to 8.39.0 ([#13367](https://github.com/mdn/yari/issues/13367)) ([5f77c9b](https://github.com/mdn/yari/commit/5f77c9b4b864bce0a6ecfdc42a71f8dc54390bd0))
+* **deps-dev:** bump webpack from 5.100.2 to 5.101.0 ([#13341](https://github.com/mdn/yari/issues/13341)) ([d94ec06](https://github.com/mdn/yari/commit/d94ec06cec3ef4a87a39dbd2a1ee149dd828bde0))
+* **deps-dev:** bump webpack from 5.100.2 to 5.101.0 in /client/pwa ([#13339](https://github.com/mdn/yari/issues/13339)) ([44cf605](https://github.com/mdn/yari/commit/44cf6052f99264dd837519989f43393ad582f304))
+* **deps:** bump [@zip](https://github.com/zip).js/zip.js from 2.7.68 to 2.7.69 in /client/pwa ([#13338](https://github.com/mdn/yari/issues/13338)) ([f8bb4ed](https://github.com/mdn/yari/commit/f8bb4ed47c2c7ed31fc8d99555edb8a6beb6a2b3))
+* **deps:** bump [@zip](https://github.com/zip).js/zip.js from 2.7.69 to 2.7.70 in /client/pwa ([#13347](https://github.com/mdn/yari/issues/13347)) ([e26a716](https://github.com/mdn/yari/commit/e26a7164ec431a0d92efe530faea427a8fcb9821))
+* **deps:** bump [@zip](https://github.com/zip).js/zip.js from 2.7.70 to 2.7.71 in /client/pwa ([#13351](https://github.com/mdn/yari/issues/13351)) ([93defa5](https://github.com/mdn/yari/commit/93defa564404e3e6357d633b044572d48ca309a0))
+* **deps:** bump @fast-csv/parse from 5.0.2 to 5.0.5 ([#13363](https://github.com/mdn/yari/issues/13363)) ([fc671fd](https://github.com/mdn/yari/commit/fc671fd5bab26af442b6df688c02da0a17e5973f))
+* **deps:** bump @inquirer/prompts from 7.7.1 to 7.8.0 ([#13345](https://github.com/mdn/yari/issues/13345)) ([2c5b9cb](https://github.com/mdn/yari/commit/2c5b9cb9fac5d81ff3087e2fa7e6c29b6c511db5))
+* **deps:** bump @stripe/stripe-js from 7.5.0 to 7.7.0 ([#13343](https://github.com/mdn/yari/issues/13343)) ([1be5589](https://github.com/mdn/yari/commit/1be558918bbe1d2f8fde9df8ed4459ea25874f5e))
+* **deps:** bump @stripe/stripe-js from 7.7.0 to 7.8.0 ([#13362](https://github.com/mdn/yari/issues/13362)) ([cc135d6](https://github.com/mdn/yari/commit/cc135d686d378d161fcc81f4e7eb2390a2b9e1d0))
+* **deps:** bump chalk from 5.4.1 to 5.5.0 ([#13359](https://github.com/mdn/yari/issues/13359)) ([6eed0d1](https://github.com/mdn/yari/commit/6eed0d10e0a14b6501b34e8df3bcbed218417dd2))
+* **deps:** bump form-data from 2.5.1 to 2.5.5 in /libs/pong ([#13324](https://github.com/mdn/yari/issues/13324)) ([4a4bca1](https://github.com/mdn/yari/commit/4a4bca12f47bf5bef0d7c0d8e48c61f6da83e017))
+* **deps:** bump mdn-data from 2.22.0 to 2.23.0 ([#13322](https://github.com/mdn/yari/issues/13322)) ([9cd7215](https://github.com/mdn/yari/commit/9cd72154371eab264767a721ece4f913b2492e23))
+* **deps:** bump openai from 5.10.1 to 5.11.0 ([#13348](https://github.com/mdn/yari/issues/13348)) ([6f0f4ca](https://github.com/mdn/yari/commit/6f0f4cad18c07f21fd921070a919330733b9db0a))
+* **deps:** bump openai from 5.11.0 to 5.12.0 ([#13374](https://github.com/mdn/yari/issues/13374)) ([f0aebf7](https://github.com/mdn/yari/commit/f0aebf7f7225d94dcba6e2d19cd807ffcb484109))
+* **deps:** bump openai from 5.12.0 to 5.12.1 ([#13377](https://github.com/mdn/yari/issues/13377)) ([10b59b2](https://github.com/mdn/yari/commit/10b59b253daa3267700a6dcbdc6b5dec75a79891))
+* **deps:** bump the react-router group with 2 updates ([#13310](https://github.com/mdn/yari/issues/13310)) ([792e3e7](https://github.com/mdn/yari/commit/792e3e7bb4a98075ac20302fae82d10d01e3542d))
+* **fred:** re-enable offline settings ([#13378](https://github.com/mdn/yari/issues/13378)) ([f418550](https://github.com/mdn/yari/commit/f418550dba0dfe18162497f884559034a1eacf17))
+* **workflows:** add nonprod cloud deploy actions ([#13355](https://github.com/mdn/yari/issues/13355)) ([f56c9c7](https://github.com/mdn/yari/commit/f56c9c70bda6f27f4a2f780cbbf740914f88babb))
+* **workflows:** fix nonprod cloud function actions after testing ([#13357](https://github.com/mdn/yari/issues/13357)) ([46cdb12](https://github.com/mdn/yari/commit/46cdb129b730d06d65c8530c19748961ef62f2a4))
+
 ## [5.0.2](https://github.com/mdn/yari/compare/v5.0.1...v5.0.2) (2025-07-24)
 
 ### Bug Fixes
