@@ -274,6 +274,9 @@ jobs:
           # Use the stage version of interactive examples in react app
           REACT_APP_INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.allizom.net
 
+          # Offline updates
+          REACT_APP_UPDATES_BASE_URL: https://updates.developer.allizom.org
+
           # Firefox Accounts and SubPlat settings
           REACT_APP_FXA_SIGNIN_URL: /users/fxa/login/authenticate/
           REACT_APP_FXA_SETTINGS_URL: https://accounts.stage.mozaws.net/settings/

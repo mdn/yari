@@ -13,15 +13,16 @@ import {
 } from "./db.js";
 import { fetchWithExampleOverride } from "./fetcher.js";
 
+declare var __UPDATES_BASE_URL__: string | undefined;
+
 export const INTERACTIVE_EXAMPLES_URL = new URL(
   "https://interactive-examples.mdn.mozilla.net"
 );
 export const LIVE_SAMPLES_URL = new URL("https://live-samples.mdn.mozilla.net");
 export const USER_CONTENT_URL = new URL("https://mozillausercontent.com");
 
-const UPDATES_BASE_URL = `https://updates.${
-  location.hostname === "localhost" ? "developer.allizom.org" : location.host
-}`;
+const UPDATES_BASE_URL =
+  __UPDATES_BASE_URL__ || "https://updates.developer.mozilla.org";
 
 const SW_TYPE: SwType =
   SwType[new URLSearchParams(location.search).get("type")] ||

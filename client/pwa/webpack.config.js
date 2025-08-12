@@ -25,6 +25,9 @@ const config = {
   plugins: [
     new webpack.DefinePlugin({
       __COMMIT_HASH__: JSON.stringify(commitHash),
+      __UPDATES_BASE_URL__: JSON.stringify(
+        process.env.REACT_APP_UPDATES_BASE_URL
+      ),
     }),
   ],
 
