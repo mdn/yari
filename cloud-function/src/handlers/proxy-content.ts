@@ -10,9 +10,7 @@ import { Source, sourceUri, WILDCARD_ENABLED } from "../env.js";
 import { PROXY_TIMEOUT } from "../constants.js";
 import { isLiveSampleURL } from "../utils.js";
 
-const NOT_FOUND_PATH = "en-us/404/index.html";
-
-let notFoundBufferCache: Promise<ArrayBuffer>;
+const notFoundBufferCache: Record<string, Promise<ArrayBuffer>> = {};
 
 const target = sourceUri(Source.content);
 
@@ -56,19 +54,9 @@ export const proxyContent = createProxyMiddleware({
             return Buffer.from(await tryHtml.arrayBuffer());
           }
 
-          let notFoundBuffer: Promise<ArrayBuffer>;
-          if (notFoundBufferCache) {
-            notFoundBuffer = notFoundBufferCache;
-          } else {
-            const response = await fetch(`${target}${NOT_FOUND_PATH}`);
-            notFoundBuffer = response.arrayBuffer();
-            if (response.ok && !WILDCARD_ENABLED) {
-              notFoundBufferCache = notFoundBuffer;
-            }
-          }
-
           res.setHeader("Content-Type", "text/html");
-          return Buffer.from(await notFoundBuffer);
+          const locale = req.url?.match(/[^/]+/)?.[0] ?? "en-us";
+          return get404ForLocale(locale);
         }
 
         return responseBuffer;
@@ -76,3 +64,24 @@ export const proxyContent = createProxyMiddleware({
     ),
   },
 });
+
+async function get404ForLocale(
+  locale: string
+): Promise<Buffer<ArrayBufferLike> | string> {
+  let notFoundBuffer: Promise<ArrayBuffer>;
+  if (notFoundBufferCache[locale]) {
+    notFoundBuffer = notFoundBufferCache[locale];
+  } else {
+    const response = await fetch(`${target}${locale}/404/index.html`);
+    notFoundBuffer = response.arrayBuffer();
+    if (!WILDCARD_ENABLED) {
+      if (response.ok) {
+        notFoundBufferCache[locale] = notFoundBuffer;
+      } else {
+        return locale === "en-us" ? "not found" : get404ForLocale("en-us");
+      }
+    }
+  }
+
+  return Buffer.from(await notFoundBuffer);
+}
