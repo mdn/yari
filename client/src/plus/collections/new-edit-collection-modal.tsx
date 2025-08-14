@@ -142,6 +142,7 @@ export default function NewEditCollectionModal({
                       autoComplete="off"
                       type="text"
                       required={true}
+                      pattern=".*\S.*"
                       disabled={isPending}
                     />
                   )}
