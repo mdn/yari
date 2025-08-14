@@ -330,6 +330,7 @@ jobs:
           npm run build
           node build/ssr.js
           cp -r dist/* out/static/
+          cp dist/service-worker/service-worker.js* out/
 
           cp "$YARI_ROOT/assets/prod/robots.txt" out/robots.txt
 
