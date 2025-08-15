@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
@@ -34,7 +34,7 @@ jobs:
           echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
       - name: Checkout (content)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: mdn/content
           path: mdn/content

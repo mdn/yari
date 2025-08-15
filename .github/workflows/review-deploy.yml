@@ -35,7 +35,7 @@ jobs:
         run: cat /proc/cpuinfo
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v4

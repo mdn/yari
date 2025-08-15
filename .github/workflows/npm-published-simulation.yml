@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: (mdn/yari) Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: mdn/yari
 
@@ -55,7 +55,7 @@ jobs:
           yarn build:legacy:prepare
 
       - name: (mdn/content) Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: mdn/content
           path: mdn/content

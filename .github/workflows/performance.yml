@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           # Needed because of
           # https://github.com/GoogleChrome/lighthouse-ci/issues/172
@@ -25,7 +25,7 @@ jobs:
           path: mdn/yari
 
       - name: Checkout (content)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: mdn/content
           path: mdn/content
