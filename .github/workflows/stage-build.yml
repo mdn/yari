@@ -259,11 +259,10 @@ jobs:
           # Now is not the time to worry about flaws.
           BUILD_FLAW_LEVELS: "*:ignore"
 
-          # These are the Google Analytics measurement IDs for:
-          # - developer.mozilla.org (UA)
+          # This is the Google Analytics measurement ID for:
           # - developer.allizom.org (GA4)
           # Using measurement ids on other domains is okay, as GA will filter these events.
-          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: UA-36116321-5,G-ZG5HNVZRY0
+          BUILD_GOOGLE_ANALYTICS_MEASUREMENT_ID: G-ZG5HNVZRY0
 
           # This enables the Plus call-to-action banner and the Plus landing page
           REACT_APP_ENABLE_PLUS: true
@@ -284,7 +283,7 @@ jobs:
           REACT_APP_MDN_PLUS_10Y_PLAN: price_1K6X8VKb9q6OnNsLFlUcEiu4
 
           # Support for SP3
-          REACT_APP_MDN_PLUS_SUBSCRIBE_URL_SP3_BASE: https://payments-next.stage.fxa.nonprod.webservices.mozgcp.net
+          REACT_APP_MDN_PLUS_SUBSCRIBE_URL_SP3_BASE: https://payments-next.allizom.org
           REACT_APP_MDN_PLUS_5M_SP3_ID: mdnplus5mstage
           REACT_APP_MDN_PLUS_5Y_SP3_ID: mdnplus5ystage
           REACT_APP_MDN_PLUS_10M_SP3_ID: mdnsupporter10mstage
