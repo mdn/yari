@@ -1,4 +1,3 @@
-/* global fetch */
 import he from "he";
 import anonymousIpByCC from "./cc2ip.js";
 
@@ -95,6 +94,7 @@ export function createPongGetHandler(client, coder) {
 export function createPongClickHandler(coder) {
   return async (params) => {
     const click = coder.decodeAndVerify(params.get("code"));
+    // eslint-disable-next-line n/no-unsupported-features/node-builtins
     const res = await fetch(click, { redirect: "manual" });
     const status = res.status;
     const location = res.headers.get("location");
@@ -105,6 +105,7 @@ export function createPongClickHandler(coder) {
 export function createPongViewedHandler(coder) {
   return async (params) => {
     const view = coder.decodeAndVerify(params.get("code"));
+    // eslint-disable-next-line n/no-unsupported-features/node-builtins
     await fetch(view, { redirect: "manual" });
   };
 }
