@@ -80,7 +80,7 @@ jobs:
           echo "invalidate: ${{ github.event.inputs.invalidate }}"
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           path: mdn/yari
@@ -98,7 +98,7 @@ jobs:
           git merge main --no-edit || git merge --abort
 
       - name: Checkout (content)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/content
@@ -111,7 +111,7 @@ jobs:
           ref: ${{ github.event.inputs.content-ref }}
 
       - name: Checkout (mdn-studio)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-studio
@@ -120,21 +120,21 @@ jobs:
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
       - name: Checkout (generic-content)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/generic-content
           path: mdn/generic-content
 
       - name: Checkout (curriculum)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/curriculum
           path: mdn/curriculum
 
       - name: Checkout (translated-content)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content
@@ -144,7 +144,7 @@ jobs:
           ref: ${{ github.event.inputs.translated-content-ref }}
 
       - name: Checkout (translated-content-de)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content-de
@@ -164,13 +164,13 @@ jobs:
           git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de'
 
       - name: Checkout (mdn-contributor-spotlight)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-contributor-spotlight
           path: mdn/mdn-contributor-spotlight
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/fred
@@ -192,7 +192,7 @@ jobs:
         run: npm ci
 
       - name: Checkout (rari)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
         with:
           repository: mdn/rari

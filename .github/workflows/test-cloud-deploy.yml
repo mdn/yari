@@ -36,7 +36,7 @@ jobs:
           echo "invalidate: ${{ github.event.inputs.invalidate }}"
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           path: mdn/yari
@@ -59,7 +59,7 @@ jobs:
           echo "TRANSLATED_CONTENT_REF=$content" >> $GITHUB_ENV
 
       - name: Checkout (content)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: mdn/content
           path: mdn/content
@@ -71,7 +71,7 @@ jobs:
           ref: ${{ vars.CONTENT_REF }}
 
       - name: Checkout (translated-content)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
@@ -80,7 +80,7 @@ jobs:
           ref: ${{ vars.TRANSLATED_CONTENT_REF }}
 
       - name: Checkout (translated-content-de)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: mdn/translated-content-de
           path: mdn/translated-content-de
