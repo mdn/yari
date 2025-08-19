@@ -75,7 +75,7 @@ export const CSP_SCRIPT_SRC_VALUES = [
   "https://js.stripe.com",
 
   /*
-   * Inline scripts (imported in `ssr/render.tsx`).
+   * Inline scripts (imported in fred).
    *
    * If we modify them, we must always update their CSP hash here.
    *
@@ -83,11 +83,11 @@ export const CSP_SCRIPT_SRC_VALUES = [
    * previous hash to avoid issues shortly after cache invalidation.
    */
 
-  // 1. Theme switching.
+  // 1. `entry.inline.js`
   // - Previous hash (to avoid cache invalidation issues):
-  "'sha256-EehWlTYp7Bqy57gDeQttaWKp0ukTTEUKGP44h8GVeik='",
-  // - Current hash:
   "'sha256-XNBp89FG76amD8BqrJzyflxOF9PaWPqPqvJfKZPCv7M='",
+  // - Current hash:
+  "'sha256-YCNoU9DNiinACbd8n6UPyB/8vj0kXvhkOni9/06SuYw='",
 ];
 export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],

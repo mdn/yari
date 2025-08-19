@@ -15,6 +15,7 @@ export type Payload = {
   view: string;
   copy?: string;
   image?: string;
+  imageFormat?: string;
   alt?: string;
   cta?: string;
   colors?: Colors;

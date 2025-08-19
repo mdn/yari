@@ -155,19 +155,25 @@ jobs:
           repository: mdn/mdn-contributor-spotlight
           path: mdn/mdn-contributor-spotlight
 
+      - uses: actions/checkout@v4
+        if: ${{ ! vars.SKIP_BUILD }}
+        with:
+          repository: mdn/fred
+          path: mdn/fred
+
       - name: Setup Node.js environment
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         uses: actions/setup-node@v4
         with:
-          node-version-file: mdn/yari/.nvmrc
+          node-version-file: mdn/fred/.nvmrc
 
-      - name: Install all yarn packages
+      - name: Install all fred packages
         if: ${{ ! vars.SKIP_BUILD }}
-        working-directory: mdn/yari
-        run: yarn --frozen-lockfile
+        working-directory: mdn/fred
         env:
           # Use a GITHUB_TOKEN to bypass rate limiting for rari.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm ci
 
       - name: Install Python
         if: ${{ ! vars.SKIP_BUILD }}
@@ -202,7 +208,7 @@ jobs:
 
       - name: Build everything
         if: ${{ ! vars.SKIP_BUILD }}
-        working-directory: mdn/yari
+        working-directory: mdn/fred
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
           # sub-folder called "mdn/content"
@@ -212,10 +218,11 @@ jobs:
           BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
           CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           GENERIC_CONTENT_ROOT: ${{ github.workspace }}/mdn/generic-content/files
+          YARI_ROOT: ${{ github.workspace }}/mdn/yari
           BASE_URL: "https://developer.mozilla.org"
 
           # rari
-          BUILD_OUT_ROOT: "client/build"
+          BUILD_OUT_ROOT: "out"
           LIVE_SAMPLES_BASE_URL: https://live.mdnplay.dev
           INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.mozilla.net
           ADDITIONAL_LOCALES_FOR_GENERICS_AND_SPAS: de
@@ -247,9 +254,11 @@ jobs:
           # The default is to always set no to robots. This deployment is the only
           # exception in the world where we actually want to welcome robots.
           BUILD_ALWAYS_ALLOW_ROBOTS: true
+          FRED_ROBOTS_GLOBAL_ALLOW: true
 
           # Browser-compat data.
           REACT_APP_BCD_BASE_URL: https://bcd.developer.mozilla.org
+          FRED_BCD_BASE_URL: https://bcd.developer.mozilla.org
 
           # Offline updates
           REACT_APP_UPDATES_BASE_URL: https://updates.developer.mozilla.org
@@ -272,15 +281,11 @@ jobs:
           REACT_APP_MDN_PLUS_10M_SP3_ID: mdnplus10m
           REACT_APP_MDN_PLUS_10Y_SP3_ID: mdnplus10y
 
-          # Surveys.
-          REACT_APP_SURVEY_START_JS_PROPOSALS_2025: 1743120000000 # new Date("2025-03-28Z").getTime()
-          REACT_APP_SURVEY_END_JS_PROPOSALS_2025: 1744502400000 # new Date("2025-04-13Z").getTime()
-          REACT_APP_SURVEY_RATE_FROM_JS_PROPOSALS_2025: 0.0
-          REACT_APP_SURVEY_RATE_TILL_JS_PROPOSALS_2025: 0.05 # 5%
-
           # Telemetry.
           REACT_APP_GLEAN_CHANNEL: prod
           REACT_APP_GLEAN_ENABLED: true
+          FRED_GLEAN_CHANNEL: prod
+          FRED_GLEAN_ENABLED: true
 
           # Newsletter
           REACT_APP_NEWSLETTER_ENABLED: true
@@ -290,9 +295,11 @@ jobs:
 
           # Playground
           REACT_APP_PLAYGROUND_BASE_HOST: mdnplay.dev
+          FRED_PLAYGROUND_BASE_HOST: mdnplay.dev
 
           # Observatory
           REACT_APP_OBSERVATORY_API_URL: https://observatory-api.mdn.mozilla.net
+          FRED_OBSERVATORY_API_URL: https://observatory-api.mdn.mozilla.net
 
           # Sentry.
           SENTRY_DSN_BUILD: ${{ secrets.SENTRY_DSN_BUILD }}
@@ -310,36 +317,53 @@ jobs:
           # Info about which CONTENT_* environment variables were set and to what.
           echo "CONTENT_ROOT=$CONTENT_ROOT"
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
-          yarn build:sw
-          yarn build:client
-          yarn build:ssr
 
-          cp assets/prod/robots.txt client/build/robots.txt
+          mkdir -p out/static
 
-          yarn rari content sync-translated-content
-          yarn rari git-history
+          npm run rari content sync-translated-content
+          npm run rari git-history
 
-          yarn rari build --all --issues client/build/issues.json --templ-stats
-
-          du -sh client/build
+          npm run rari build -- --all --issues out/issues.json --templ-stats
 
           # SSR all pages
-          yarn render:html
+          npm run build
+          node build/ssr.js
+          cp -r dist/* out/static/
+          cp dist/service-worker/service-worker.js* out/
+
+          cp "$YARI_ROOT/assets/prod/robots.txt" out/robots.txt
+
+      - name: Install yari yarn packages
+        if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
+        run: yarn --frozen-lockfile
+        env:
+          # Use a GITHUB_TOKEN to bypass rate limiting for rari.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run yari scripts
+        if: ${{ ! vars.SKIP_BUILD }}
+        working-directory: mdn/yari
+        env:
+          FRED_ROOT: ${{ github.workspace }}/mdn/fred
+        run: |
+          set -eo pipefail
 
           # Generate whatsdeployed files.
-          yarn tool:legacy whatsdeployed --output client/build/_whatsdeployed/code.json
-          yarn tool:legacy whatsdeployed $CONTENT_ROOT --output client/build/_whatsdeployed/content.json
-          yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output client/build/_whatsdeployed/translated-content.json
+          yarn tool:legacy whatsdeployed --output "$FRED_ROOT/out/_whatsdeployed/code.json"
+          yarn tool:legacy whatsdeployed $CONTENT_ROOT --output "$FRED_ROOT/out/_whatsdeployed/content.json"
+          yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output "$FRED_ROOT/out/_whatsdeployed/translated-content.json"
 
           # Sort DE search index by en-US popularity.
-          node scripts/reorder-search-index.mjs client/build/en-us/search-index.json client/build/de/search-index.json
+          node scripts/reorder-search-index.mjs "$FRED_ROOT/out/en-us/search-index.json" "$FRED_ROOT/out/de/search-index.json"
 
       - name: Update search index
         if: ${{ ! vars.SKIP_BUILD }}
         working-directory: mdn/yari/deployer
         env:
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_PROD_ELASTICSEARCH_URL }}
-        run: poetry run deployer search-index ../client/build
+          FRED_ROOT: ${{ github.workspace }}/mdn/fred
+        run: poetry run deployer search-index "$FRED_ROOT/out"
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_BUILD }}
@@ -355,10 +379,11 @@ jobs:
 
       - name: Sync build
         if: ${{ ! vars.SKIP_BUILD }}
-        working-directory: mdn/yari
+        working-directory: mdn/fred
         run: |-
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r client/build/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
-          gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" client/build gs://${{ vars.GCP_BUCKET_NAME }}/main
+          time gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r out/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
+          time gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cr gs://${{ vars.GCP_BUCKET_NAME }}/main/static/ gs://${{ vars.GCP_BUCKET_NAME }}/fred/static/
+          time gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" out gs://${{ vars.GCP_BUCKET_NAME }}/fred
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
@@ -380,7 +405,10 @@ jobs:
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
+          FRED_ROOT: ${{ github.workspace }}/mdn/fred
         run: |-
+          mkdir -p ../client/build/
+          cp "$FRED_ROOT/out/sitemap.txt" ../client/build/
           npm ci
           npm run build-redirects
           npm run build-canonicals
@@ -410,7 +438,7 @@ jobs:
             --set-env-vars="ORIGIN_MAIN=developer.mozilla.org" \
             --set-env-vars="ORIGIN_LIVE_SAMPLES=live.mdnplay.dev" \
             --set-env-vars="ORIGIN_PLAY=mdnplay.dev" \
-            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/main/" \
+            --set-env-vars="SOURCE_CONTENT=https://storage.googleapis.com/${{ vars.GCP_BUCKET_NAME }}/fred/" \
             --set-env-vars="SOURCE_API=https://api.developer.mozilla.org/" \
             --set-env-vars="ORIGIN_TRIAL_TOKEN=AxVILwizhbMjxFeHOn1P3R8niO1RJY/smaK4B4d1rLzc1gTaxtXMSaTi+FoigYgCw40uFRDwFcEAeqDR+vVLOW4AAABfeyJvcmlnaW4iOiJodHRwczovL2RldmVsb3Blci5tb3ppbGxhLm9yZyIsImZlYXR1cmUiOiJQcml2YXRlQXR0cmlidXRpb25WMiIsImV4cGlyeSI6MTc0MjA3OTYwMH0=" \
             --set-env-vars="BSA_ENABLED=true" \
@@ -432,10 +460,11 @@ jobs:
 
       - name: Update AI Help index with macros
         working-directory: mdn/yari
-        run: yarn ai-help-macros update-index
+        run: yarn ai-help-macros update-index "$FRED_ROOT/out/en-us/docs"
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           PG_URI: ${{ secrets.PG_URI }}
+          FRED_ROOT: ${{ github.workspace }}/mdn/fred
 
       - name: Slack Notification
         if: failure()
