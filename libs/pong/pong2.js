@@ -157,6 +157,7 @@ export function createPong2GetHandler(zoneKeys, coder) {
     // Typically, without a successful sidedoor request, this will be "side", "top" and "bottom" zones.
     // With sidedoor data, typically only "bottom" remains.
     const requests = placements.map(async ({ name, zoneKey }) => {
+      // eslint-disable-next-line n/no-unsupported-features/node-builtins
       const response = await fetch(
         `https://srv.buysellads.com/ads/${zoneKey}.json?forwardedip=${encodeURIComponent(
           anonymousIp
@@ -305,6 +306,7 @@ export function createPong2ClickHandler(coder) {
     clickURL.searchParams.set("forwardedip", anonymousIp);
     clickURL.searchParams.set("useragent", userAgent);
 
+    // eslint-disable-next-line n/no-unsupported-features/node-builtins
     const res = await fetch(clickURL, {
       redirect: "manual",
     });
