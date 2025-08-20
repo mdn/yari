@@ -36,9 +36,11 @@ export function createPong2GetHandler(zoneKeys, coder) {
     const sidedoorZoneKey = zoneKeys.sidedoor;
 
     // If we have a request for side and top, consider a sidedoor takeover.
-    const sidedoorEligible = ["side", "top"].every((name) =>
-      placements.some((placement) => placement.name === name)
-    );
+    const sidedoorEligible =
+      sidedoorZoneKey &&
+      ["side", "top"].every((name) =>
+        placements.some((placement) => placement.name === name)
+      );
 
     // This will be populated with sidedoor data if all conditions align.
     let sidedoorData = {};
