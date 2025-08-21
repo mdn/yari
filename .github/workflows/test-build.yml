@@ -323,20 +323,17 @@ jobs:
           echo "CONTENT_TRANSLATED_ROOT=$CONTENT_TRANSLATED_ROOT"
           echo "BLOG_ROOT=$BLOG_ROOT"
 
-          mkdir -p out/static
-
           npm run rari content sync-translated-content
           npm run rari git-history
 
-          npm run rari build -- --all --issues out/issues.json --templ-stats
+          npm run rari build -- --all --issues "$BUILD_OUT_ROOT/issues.json" --templ-stats
 
           # SSR all pages
           npm run build
           node build/ssr.js
-          cp -r dist/* out/static/
-          cp dist/service-worker/service-worker.js* out/
 
-          cp "$YARI_ROOT/assets/nonprod/robots.txt" out/robots.txt
+          cp -r "$YARI_ROOT/client/public/assets" "$BUILD_OUT_ROOT"
+          cp "$YARI_ROOT/assets/nonprod/robots.txt" "$BUILD_OUT_ROOT/robots.txt"
 
       - name: Install yari yarn packages
         if: ${{ ! vars.SKIP_BUILD }}
