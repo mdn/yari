@@ -29,10 +29,135 @@ export function createPong2GetHandler(zoneKeys, coder) {
 
     const anonymousIp = anonymousIpByCC(countryCode);
 
-    const placements = pongs.map((p) => {
+    let placements = pongs.map((p) => {
       return { name: p, zoneKey: [zoneKeys[p]] };
     });
 
+    const sidedoorZoneKey = zoneKeys.sidedoor;
+
+    // If we have a request for side and top, consider a sidedoor takeover.
+    const sidedoorEligible =
+      sidedoorZoneKey &&
+      ["side", "top"].every((name) =>
+        placements.some((placement) => placement.name === name)
+      );
+
+    // This will be populated with sidedoor data if all conditions align.
+    let sidedoorData = {};
+    if (sidedoorEligible) {
+      // Make the sidedoor request to the single sidedoor zone
+      // The response will be populated with data for both the top and side placement.
+      const res = await fetch(
+        `https://srv.buysellads.com/ads/${sidedoorZoneKey}.json?forwardedip=${encodeURIComponent(
+          anonymousIp
+        )}${userAgent ? `&useragent=${encodeURIComponent(userAgent)}` : ""}`
+      );
+      try {
+        const sidedoorResponse = await res.json();
+        const {
+          ads: [
+            {
+              statlink = null,
+              statview,
+
+              SidebarDescription,
+              SidebarLargeImage,
+              SkyscraperImage,
+              SideBarImageTitle,
+              SidebarBackgroundColor,
+              SidebarCallToAction,
+              SidebarTextColor,
+              SidebarHeading,
+
+              TopBarDescription,
+              TopBarImage,
+              LeaderboardImage,
+              TopBarImageTitle,
+              TopBarBackgroundColorDark,
+              TopBarBackgroundColorLight,
+              TopBarCallToAction,
+              TopBarCtaBackgroundColorDark,
+              TopBarCtaBackgroundColorLight,
+              TopBarCtaTextColorDark,
+              TopBarCtaTextColorLight,
+              TopBarTextColorDark,
+              TopBarTextColorLight,
+            },
+          ] = [],
+        } = sidedoorResponse;
+
+        // If we do not have the `statLink` field present, we do not have placements.
+        // A missing `statLink` field represents an 'empty' response.
+        if (statlink !== null) {
+          // Create side and top bar data objects
+          const sideImageFormat = SkyscraperImage
+            ? "skyscraper"
+            : SidebarLargeImage
+              ? "large"
+              : "unknown";
+          const topImageFormat = LeaderboardImage
+            ? "leaderboard"
+            : TopBarImage
+              ? "image"
+              : "unknown";
+
+          const side = {
+            click: coder.encodeAndSign(statlink),
+            view: coder.encodeAndSign(statview),
+            image: coder.encodeAndSign(SkyscraperImage || SidebarLargeImage),
+            imageFormat: sideImageFormat,
+            alt: SideBarImageTitle && he.decode(SideBarImageTitle),
+            copy: SidebarDescription && he.decode(SidebarDescription), // only present on large + image images
+            cta: SidebarCallToAction && he.decode(SidebarCallToAction),
+            heading: SidebarHeading && he.decode(SidebarHeading),
+            colors: {
+              textColor: fixupColor(SidebarTextColor),
+              backgroundColor: fixupColor(SidebarBackgroundColor),
+            },
+          };
+
+          const top = {
+            click: coder.encodeAndSign(statlink),
+            view: coder.encodeAndSign(statview),
+            image: coder.encodeAndSign(LeaderboardImage || TopBarImage),
+            imageFormat: topImageFormat,
+            alt: TopBarImageTitle && he.decode(TopBarImageTitle),
+            copy: TopBarDescription && he.decode(TopBarDescription), // only present on large + image images
+            cta: TopBarCallToAction && he.decode(TopBarCallToAction),
+            colors: {
+              textColor: fixupColor(TopBarTextColorLight),
+              backgroundColor: fixupColor(TopBarBackgroundColorLight),
+              ctaTextColor: fixupColor(TopBarCtaTextColorLight),
+              ctaBackgroundColor: fixupColor(TopBarCtaBackgroundColorLight),
+              textColorDark: fixupColor(TopBarTextColorDark),
+              backgroundColorDark: fixupColor(TopBarBackgroundColorDark),
+              ctaTextColorDark: fixupColor(TopBarCtaTextColorDark),
+              ctaBackgroundColorDark: fixupColor(TopBarCtaBackgroundColorDark),
+            },
+          };
+          // We have a top and sidebar placement, put it into the sidedoor object.
+          sidedoorData = {
+            side: side,
+            top: top,
+          };
+        }
+      } catch (error) {
+        console.error("Error fetching sidedoor data:", error);
+      }
+    }
+
+    // Now, if we successfully fetched sidedoor data, we need to filter out side and top requests from the
+    // placement map:
+    if (Object.keys(sidedoorData).length > 0) {
+      placements = placements.filter(
+        ({ name }) => !["side", "top"].includes(name)
+      );
+    }
+
+    // Normal request logic commences after the sidedoor logic (sometimes called "Waterfall setup").
+    // Any entries left in the placement map will be fetched concurrently.
+    // Typically, without a successful sidedoor request, this will be "side", "top" and "bottom" zones.
+    // With sidedoor data, typically only "bottom" remains.
     const requests = placements.map(async ({ name, zoneKey }) => {
       // eslint-disable-next-line n/no-unsupported-features/node-builtins
       const response = await fetch(
@@ -122,6 +247,9 @@ export function createPong2GetHandler(zoneKeys, coder) {
     const decisions = Object.fromEntries(
       decisionRes.map(({ name, p }) => [name, p])
     );
+
+    // merge sidedoorData into decisions
+    Object.assign(decisions, sidedoorData);
 
     if (pongs.every((p) => decisions[p] === null)) {
       let status = "geo_unsupported";
