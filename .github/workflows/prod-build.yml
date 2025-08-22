@@ -68,12 +68,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: mdn/yari
 
       - name: Checkout (content)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/content
@@ -85,7 +85,7 @@ jobs:
           fetch-depth: 0
 
       - name: Checkout (mdn-studio)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-studio
@@ -94,14 +94,14 @@ jobs:
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
       - name: Checkout (generic-content)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/generic-content
           path: mdn/generic-content
 
       - name: Checkout (curriculum)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/curriculum
@@ -120,7 +120,7 @@ jobs:
           echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
 
       - name: Checkout (translated-content)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content
@@ -129,7 +129,7 @@ jobs:
           fetch-depth: 0
 
       - name: Checkout (translated-content-de)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content-de
@@ -149,13 +149,13 @@ jobs:
           git -c user.name='MDN' -c user.email='mdn-dev@mozilla.com' commit -m 'de'
 
       - name: Checkout (mdn-contributor-spotlight)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-contributor-spotlight
           path: mdn/mdn-contributor-spotlight
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/fred
