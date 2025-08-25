@@ -102,7 +102,7 @@
     "codemirror": "^6.0.2",
     "compression": "^1.8.1",
     "compute-baseline": "^0.3.1",
-    "concurrently": "^9.2.0",
+    "concurrently": "^9.2.1",
     "construct-style-sheets-polyfill": "^3.1.0",
     "cookie": "^0.7.2",
     "cookie-parser": "^1.4.7",
