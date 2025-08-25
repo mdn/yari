@@ -12,7 +12,7 @@ python = "^3.10"
 pytest = "^8.4.1"
 pytest-base-url = "^2.1.0"
 pytest-rerunfailures = "^15.1"
-requests = "^2.32.4"
+requests = "^2.32.5"
 pyquery = "^2.0.1"
 braceexpand = "^0.1.7"
 
