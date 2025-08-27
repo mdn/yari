@@ -12148,10 +12148,10 @@ open@^10.0.3, open@^10.1.0, open@^10.2.0:
     is-inside-container "^1.0.0"
     wsl-utils "^0.1.0"
 
-openai@^5.15.0:
-  version "5.15.0"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-5.15.0.tgz#de3ae6d0914f7a0fcc12d0faa21a2289f9d5cc5d"
-  integrity sha512-kcUdws8K/A8m02I+IqFBwO51gS+87GP89yWEufGbzEi8anBz4FB/bti2QxaJdGwwY4mwJGzx85XO7TuL/Tpu1w==
+openai@^5.16.0:
+  version "5.16.0"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-5.16.0.tgz#a302d4ca92954598c79c72dd199c58994708130d"
+  integrity sha512-hoEH8ZNvg1HXjU9mp88L/ZH8O082Z8r6FHCXGiWAzVRrEv443aI57qhch4snu07yQydj+AUAWLenAiBXhu89Tw==
 
 opener@^1.5.2:
   version "1.5.2"
