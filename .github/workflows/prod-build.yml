@@ -2,17 +2,10 @@ name: Prod Build
 
 # NOTE! This is the *PROD* workflow.
 # Keep in mind that much of the configuration is repeated in `stage-build.yml`
-# and `dev-build.yml`
-#
-# For a complete picture of all environments, see:
-#
-#  https://docs.google.com/spreadsheets/d/1VnnEl-iTtKYmlyN02FiEXygxZCgE4o_ZO8wSleebne4/edit?usp=sharing
-#
+# and `test-build.yml`
 
 env:
-  DEFAULT_DEPLOYMENT_PREFIX: "main"
-  DEFAULT_NOTES: ""
-  DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD: "false"
+  BUILD_OUT_ROOT: ${{ github.workspace }}/mdn/fred/out
 
 on:
   schedule:
@@ -23,23 +16,6 @@ on:
       notes:
         description: "Notes"
         required: false
-        default: ${DEFAULT_NOTES}
-
-      # This is very useful when combined with the "Use workflow from"
-      # feature that is built into the "Run workflow" button on
-      # https://github.com/mdn/yari/actions?query=workflow%3A%22Production+Build%22
-      # If you override the deployment prefix to something like the name
-      # of the branch, you can deploy that entire branch to its own prefix
-      # in S3 which means that it can be fully hosted as its own site.
-      deployment_prefix:
-        description: "Deployment prefix"
-        required: false
-        default: ${DEFAULT_DEPLOYMENT_PREFIX}
-
-      log_each_successful_upload:
-        description: "Deployer logs each success"
-        required: false
-        default: ${DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD}
 
       invalidate:
         description: "Invalidate CDN (use only in exceptional circumstances)"
@@ -74,19 +50,13 @@ jobs:
 
       - name: Checkout (content)
         uses: actions/checkout@v5
-        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/content
           path: mdn/content
-          # Yes, this means fetch EVERY COMMIT EVER.
-          # It's probably not sustainable in the far future (e.g. past 2021)
-          # but for now it's good enough. We'll need all the history
-          # so we can figure out each document's last-modified date.
           fetch-depth: 0
 
       - name: Checkout (mdn-studio)
         uses: actions/checkout@v5
-        if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-studio
           path: mdn/mdn-studio
@@ -95,54 +65,35 @@ jobs:
 
       - name: Checkout (generic-content)
         uses: actions/checkout@v5
-        if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/generic-content
           path: mdn/generic-content
 
       - name: Checkout (curriculum)
         uses: actions/checkout@v5
-        if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/curriculum
           path: mdn/curriculum
 
-      # Our usecase is a bit complicated. When the cron schedule runs this workflow,
-      # we rely on the env vars defined at the top of the file. But if it's a manual
-      # trigger we rely on the inputs and only the inputs. That way, the user can
-      # opt to type in 'false'.
-      # It's not possible to express this with GitHub Workflow syntax, so we
-      # have a dedicate set that conveniently sets these as env vars which we
-      # can refer to later in `if: ....` lines or in bash with the `run: ...` blocks.
-      - name: Merge dispatch inputs with default env vars
-        run: |
-          echo "DEPLOYER_BUCKET_PREFIX=${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}" >> $GITHUB_ENV
-          echo "DEPLOYER_LOG_EACH_SUCCESSFUL_UPLOAD=${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}" >> $GITHUB_ENV
-
       - name: Checkout (translated-content)
         uses: actions/checkout@v5
-        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content
           path: mdn/translated-content
-          # See matching warning for mdn/content checkout step
           fetch-depth: 0
 
       - name: Checkout (translated-content-de)
         uses: actions/checkout@v5
-        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         with:
           repository: mdn/translated-content-de
           path: mdn/translated-content-de
 
       - name: Move de into translated-content
-        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         run: |
           mv mdn/translated-content-de/files/de mdn/translated-content/files/
           rm -rf mdn/translated-content-de
 
       - name: Clean and commit de
-        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         working-directory: mdn/translated-content
         run: |
           git add files/de
@@ -150,25 +101,22 @@ jobs:
 
       - name: Checkout (mdn-contributor-spotlight)
         uses: actions/checkout@v5
-        if: ${{ ! vars.SKIP_BUILD }}
         with:
           repository: mdn/mdn-contributor-spotlight
           path: mdn/mdn-contributor-spotlight
 
-      - uses: actions/checkout@v5
-        if: ${{ ! vars.SKIP_BUILD }}
+      - name: Checkout (fred)
+        uses: actions/checkout@v5
         with:
           repository: mdn/fred
           path: mdn/fred
 
       - name: Setup Node.js environment
-        if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
         uses: actions/setup-node@v4
         with:
           node-version-file: mdn/fred/.nvmrc
 
       - name: Install all fred packages
-        if: ${{ ! vars.SKIP_BUILD }}
         working-directory: mdn/fred
         env:
           # Use a GITHUB_TOKEN to bypass rate limiting for rari.
@@ -176,22 +124,18 @@ jobs:
         run: npm ci
 
       - name: Install Python
-        if: ${{ ! vars.SKIP_BUILD }}
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
       - name: Install Python poetry
-        if: ${{ ! vars.SKIP_BUILD }}
         uses: snok/install-poetry@v1
 
       - name: Install deployer
-        if: ${{ ! vars.SKIP_BUILD }}
         working-directory: mdn/yari/deployer
         run: poetry install
 
       - name: Display Python & Poetry version
-        if: ${{ ! vars.SKIP_BUILD }}
         working-directory: mdn/yari/deployer
         run: |
           python --version
@@ -199,15 +143,12 @@ jobs:
 
       - name: Print information about build
         run: |
-          echo "notes: ${{ github.event.inputs.notes || env.DEFAULT_NOTES }}"
-          echo "log_each_successful_upload: ${{ github.event.inputs.log_each_successful_upload || env.DEFAULT_LOG_EACH_SUCCESSFUL_UPLOAD }}"
-          echo "deployment_prefix: ${{ github.event.inputs.deployment_prefix || env.DEFAULT_DEPLOYMENT_PREFIX }}"
+          echo "notes: ${{ github.event.inputs.notes }}"
 
       - name: Print information about CPU
         run: cat /proc/cpuinfo
 
       - name: Build everything
-        if: ${{ ! vars.SKIP_BUILD }}
         working-directory: mdn/fred
         env:
           # Remember, the mdn/content repo got cloned into `pwd` into a
@@ -222,7 +163,6 @@ jobs:
           BASE_URL: "https://developer.mozilla.org"
 
           # rari
-          BUILD_OUT_ROOT: "out"
           LIVE_SAMPLES_BASE_URL: https://live.mdnplay.dev
           INTERACTIVE_EXAMPLES_BASE_URL: https://interactive-examples.mdn.mozilla.net
           ADDITIONAL_LOCALES_FOR_GENERICS_AND_SPAS: de
@@ -331,7 +271,6 @@ jobs:
           cp "$YARI_ROOT/assets/prod/robots.txt" "$BUILD_OUT_ROOT/robots.txt"
 
       - name: Install yari yarn packages
-        if: ${{ ! vars.SKIP_BUILD }}
         working-directory: mdn/yari
         run: yarn --frozen-lockfile
         env:
@@ -339,31 +278,25 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run yari scripts
-        if: ${{ ! vars.SKIP_BUILD }}
         working-directory: mdn/yari
-        env:
-          FRED_ROOT: ${{ github.workspace }}/mdn/fred
         run: |
           set -eo pipefail
 
           # Generate whatsdeployed files.
-          yarn tool:legacy whatsdeployed --output "$FRED_ROOT/out/_whatsdeployed/code.json"
-          yarn tool:legacy whatsdeployed $CONTENT_ROOT --output "$FRED_ROOT/out/_whatsdeployed/content.json"
-          yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output "$FRED_ROOT/out/_whatsdeployed/translated-content.json"
+          yarn tool:legacy whatsdeployed --output "$BUILD_OUT_ROOT/_whatsdeployed/code.json"
+          yarn tool:legacy whatsdeployed $CONTENT_ROOT --output "$BUILD_OUT_ROOT/_whatsdeployed/content.json"
+          yarn tool:legacy whatsdeployed $CONTENT_TRANSLATED_ROOT --output "$BUILD_OUT_ROOT/_whatsdeployed/translated-content.json"
 
           # Sort DE search index by en-US popularity.
-          node scripts/reorder-search-index.mjs "$FRED_ROOT/out/en-us/search-index.json" "$FRED_ROOT/out/de/search-index.json"
+          node scripts/reorder-search-index.mjs "$BUILD_OUT_ROOT/en-us/search-index.json" "$BUILD_OUT_ROOT/de/search-index.json"
 
       - name: Update search index
-        if: ${{ ! vars.SKIP_BUILD }}
         working-directory: mdn/yari/deployer
         env:
           DEPLOYER_ELASTICSEARCH_URL: ${{ secrets.DEPLOYER_PROD_ELASTICSEARCH_URL }}
-          FRED_ROOT: ${{ github.workspace }}/mdn/fred
-        run: poetry run deployer search-index "$FRED_ROOT/out"
+        run: poetry run deployer search-index $BUILD_OUT_ROOT
 
       - name: Authenticate with GCP
-        if: ${{ ! vars.SKIP_BUILD }}
         uses: google-github-actions/auth@v2
         with:
           token_format: access_token
@@ -371,19 +304,15 @@ jobs:
           workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
 
       - name: Setup gcloud
-        if: ${{ ! vars.SKIP_BUILD }}
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Sync build
-        if: ${{ ! vars.SKIP_BUILD }}
         working-directory: mdn/fred
         run: |-
-          time gsutil -q -m -h "Cache-Control: public, max-age=3600" cp -r out/static gs://${{ vars.GCP_BUCKET_NAME }}/main/
-          time gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cr gs://${{ vars.GCP_BUCKET_NAME }}/main/static/ gs://${{ vars.GCP_BUCKET_NAME }}/fred/static/
-          time gsutil -q -m -h "Cache-Control: public, max-age=3600" rsync -cdrj html,json,txt -y "^static/" out gs://${{ vars.GCP_BUCKET_NAME }}/fred
+          time gsutil -q -m -h "cache-control: no-store" cp -r out/static gs://${{ vars.GCP_BUCKET_NAME }}/fred/
+          time gsutil -q -m -h "cache-control: no-store" rsync -cdrj html,json,txt -y "^static/" out gs://${{ vars.GCP_BUCKET_NAME }}/fred
 
       - name: Authenticate with GCP
-        if: ${{ ! vars.SKIP_FUNCTION }}
         uses: google-github-actions/auth@v2
         with:
           token_format: access_token
@@ -391,27 +320,23 @@ jobs:
           workload_identity_provider: projects/${{ secrets.WIP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
 
       - name: Setup gcloud
-        if: ${{ ! vars.SKIP_FUNCTION }}
         uses: google-github-actions/setup-gcloud@v2
         with:
           install_components: "beta"
 
       - name: Generate redirects map
-        if: ${{ ! vars.SKIP_FUNCTION }}
         working-directory: mdn/yari/cloud-function
         env:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
-          FRED_ROOT: ${{ github.workspace }}/mdn/fred
         run: |-
           mkdir -p ../client/build/
-          cp "$FRED_ROOT/out/sitemap.txt" ../client/build/
+          cp "$BUILD_OUT_ROOT/sitemap.txt" ../client/build/
           npm ci
           npm run build-redirects
           npm run build-canonicals
 
       - name: Deploy Function
-        if: ${{ ! vars.SKIP_FUNCTION }}
         working-directory: mdn/yari
         run: |-
           set -eo pipefail
@@ -457,11 +382,10 @@ jobs:
 
       - name: Update AI Help index with macros
         working-directory: mdn/yari
-        run: yarn ai-help-macros update-index "$FRED_ROOT/out/en-us/docs"
+        run: yarn ai-help-macros update-index "$BUILD_OUT_ROOT/en-us/docs"
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           PG_URI: ${{ secrets.PG_URI }}
-          FRED_ROOT: ${{ github.workspace }}/mdn/fred
 
       - name: Slack Notification
         if: failure()
