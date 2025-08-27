@@ -176,14 +176,14 @@ jobs:
 
       - name: Checkout (rari)
         uses: actions/checkout@v5
-        if: ${{ github.event.inputs.rari-ref == '' ) }}
+        if: ${{ github.event.inputs.rari-ref == '' }}
         with:
           repository: mdn/rari
           path: mdn/rari
           ref: ${{ github.event.inputs.rari-ref }}
 
       - name: Cache Cargo registry
-        if: ${{ github.event.inputs.rari-ref == '' ) }}
+        if: ${{ github.event.inputs.rari-ref == '' }}
         uses: actions/cache@v4
         with:
           path: |
@@ -193,14 +193,14 @@ jobs:
           restore-keys: ${{ runner.os }}-cargo-
 
       - uses: dtolnay/rust-toolchain@stable
-        if: ${{ github.event.inputs.rari-ref == '' ) }}
+        if: ${{ github.event.inputs.rari-ref == '' }}
 
       - name: sccache-cache
-        if: ${{ github.event.inputs.rari-ref == '' ) }}
+        if: ${{ github.event.inputs.rari-ref == '' }}
         uses: mozilla-actions/sccache-action@v0.0.9
 
       - name: Build rari
-        if: ${{ github.event.inputs.rari-ref == '' ) }}
+        if: ${{ github.event.inputs.rari-ref == '' }}
         run: |
           cd mdn/rari
           cargo build --release
