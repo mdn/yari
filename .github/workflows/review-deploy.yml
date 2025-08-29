@@ -59,7 +59,7 @@ jobs:
 
       - name: Setup gcloud
         if: ${{ ! vars.SKIP_FUNCTION }}
-        uses: google-github-actions/setup-gcloud@v2
+        uses: google-github-actions/setup-gcloud@v3
         with:
           install_components: "beta"
 
