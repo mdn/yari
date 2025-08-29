@@ -360,7 +360,7 @@ jobs:
           node scripts/reorder-search-index.mjs "$FRED_ROOT/out/en-us/search-index.json" "$FRED_ROOT/out/de/search-index.json"
 
       - name: Authenticate with GCP
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@v3
         with:
           token_format: access_token
           service_account: deploy-test-content@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
@@ -378,7 +378,7 @@ jobs:
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@v3
         with:
           token_format: access_token
           service_account: deploy-test-nonprod-mdn-ingres@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
