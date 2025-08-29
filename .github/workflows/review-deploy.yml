@@ -51,7 +51,7 @@ jobs:
 
       - name: Authenticate with GCP
         if: ${{ ! vars.SKIP_FUNCTION }}
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@v3
         with:
           token_format: access_token
           service_account: deploy-mdn-review-functions@${{ secrets.GCP_PROJECT_NAME }}.iam.gserviceaccount.com
