@@ -65,11 +65,11 @@ jobs:
           # so we can figure out each document's last-modified date.
           fetch-depth: 0
 
-      - name: Checkout (mdn-studio)
+      - name: Checkout (blog)
         uses: actions/checkout@v5
         with:
-          repository: mdn/mdn-studio
-          path: mdn/mdn-studio
+          repository: mdn/blog
+          path: mdn/blog
           lfs: true
           token: ${{ secrets.MDN_STUDIO_PAT }}
 
@@ -161,7 +161,7 @@ jobs:
           CONTENT_ROOT: ${{ github.workspace }}/mdn/content/files
           CONTENT_TRANSLATED_ROOT: ${{ github.workspace }}/mdn/translated-content/files
           CONTRIBUTOR_SPOTLIGHT_ROOT: ${{ github.workspace }}/mdn/mdn-contributor-spotlight/contributors
-          BLOG_ROOT: ${{ github.workspace }}/mdn/mdn-studio/content/posts
+          BLOG_ROOT: ${{ github.workspace }}/mdn/blog/content/posts
           CURRICULUM_ROOT: ${{ github.workspace }}/mdn/curriculum
           GENERIC_CONTENT_ROOT: ${{ github.workspace }}/mdn/generic-content/files
 
