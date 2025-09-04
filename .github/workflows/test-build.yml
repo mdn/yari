@@ -179,7 +179,7 @@ jobs:
 
       - name: Setup Node.js environment
         if: ${{ ! vars.SKIP_BUILD || ! vars.SKIP_FUNCTION }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: mdn/fred/.nvmrc
 
