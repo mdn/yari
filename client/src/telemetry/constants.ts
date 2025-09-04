@@ -1,5 +1,3 @@
-import { ViewportBreakpoint } from "./glean-context";
-
 export const OFFER_OVERVIEW_CLICK = "offer_overview_click";
 export const SIDEBAR_CLICK = "sidebar_click";
 export const SIDEBAR_CLICK_WITH_FILTER = "sidebar_click_with_filter";
@@ -62,16 +60,6 @@ export const PLUS_UPDATES = Object.freeze({
 });
 
 export const BREADCRUMB_CLICK = "breadcrumb_click";
-
-export const VIEWPORT_BREAKPOINTS: readonly [ViewportBreakpoint, number][] =
-  Object.freeze([
-    ["xxl", 1441],
-    ["xl", 1200],
-    ["lg", 992],
-    ["md", 769],
-    ["sm", 426],
-    ["xs", 0],
-  ]);
 
 export const ARTICLE_FOOTER = "article_footer";
 export const THUMBS = "thumbs";
