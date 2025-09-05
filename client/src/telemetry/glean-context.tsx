@@ -15,10 +15,9 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { useUserData } from "../user-context";
 import { handleSidebarClick } from "./sidebar-click";
-import { EXTERNAL_LINK, VIEWPORT_BREAKPOINTS } from "./constants";
+import { EXTERNAL_LINK } from "./constants";
 import { Doc } from "../../../libs/types/document";
 
-export type ViewportBreakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 export type HTTPStatus = "200" | "404";
 
 const UTM_PARAMETER_NAMES = [
@@ -35,13 +34,9 @@ type UTMParameters = Partial<
 export type PageProps = {
   referrer: string | undefined;
   path: string | undefined;
-  httpStatus: HTTPStatus;
   subscriptionType: string;
   geo: string | undefined;
   geo_iso: string | undefined;
-  userLanguages: string[];
-  viewportBreakpoint: ViewportBreakpoint | undefined;
-  isBaseline?: string;
   utm: UTMParameters;
 };
 
@@ -111,9 +106,6 @@ function glean(): GleanAnalytics {
       if (referrer) {
         pageMetric.referrer.setUrl(referrer);
       }
-      if (page.isBaseline) {
-        pageMetric.isBaseline.set(page.isBaseline);
-      }
       for (const param of Object.keys(page.utm) as Array<
         keyof typeof page.utm
       >) {
@@ -122,18 +114,11 @@ function glean(): GleanAnalytics {
           pageMetric.utm[param]?.set(value);
         }
       }
-      pageMetric.httpStatus.set(page.httpStatus);
       if (page.geo) {
         navigatorMetric.geo.set(page.geo);
       }
       if (page.geo_iso) {
         navigatorMetric.geoIso.set(page.geo_iso);
-      }
-      if (page.userLanguages) {
-        navigatorMetric.userLanguages.set(page.userLanguages);
-      }
-      if (page.viewportBreakpoint) {
-        navigatorMetric.viewportBreakpoint.set(page.viewportBreakpoint);
       }
       navigatorMetric.subscriptionType.set(page.subscriptionType);
       return () => pings.page.submit();
@@ -214,20 +199,9 @@ export function useGleanPage(pageNotFound: boolean, doc?: Doc) {
     const submit = gleanAnalytics.page({
       path: window?.location.toString(),
       referrer: document?.referrer,
-      // on port 3000 this will always return "200":
-      httpStatus: pageNotFound ? "404" : "200",
-      userLanguages: Array.from(navigator?.languages || []),
       geo: userData?.geo?.country,
       geo_iso: userData?.geo?.country_iso,
       subscriptionType: userData?.subscriptionType || "anonymous",
-      viewportBreakpoint: VIEWPORT_BREAKPOINTS.find(
-        ([_, width]) => width <= window.innerWidth
-      )?.[0],
-      isBaseline: doc?.baseline?.baseline
-        ? `baseline_${doc.baseline.baseline}`
-        : doc?.baseline?.baseline === false
-          ? "not_baseline"
-          : undefined,
       utm: getUTMParameters(),
     });
     if (typeof userData !== "undefined" && path.current !== loc.pathname) {
