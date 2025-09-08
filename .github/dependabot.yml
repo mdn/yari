@@ -7,22 +7,20 @@ updates:
       interval: daily
     open-pull-requests-limit: 35
     groups:
-      sentry:
-        patterns:
-          - "@sentry/*"
-      react-router:
-        patterns:
-          - "react-router"
-          - "react-router-dom"
-      types:
-        patterns:
-          - "@types/*"
+      prod:
+        dependency-type: production
         update-types:
-          - "minor"
-          - "patch"
-    ignore:
-      # Temporarily disable updates to Dinocons
-      - dependency-name: "@mdn/dinocons"
+          - minor
+          - patch
+        exclude-patterns:
+          - "@mdn/*"
+      dev:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "@mdn/*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -58,30 +56,105 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    groups:
+      prod:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "@mdn/*"
+      dev:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "@mdn/*"
 
   - package-ecosystem: npm
     directory: "/cloud-function"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    groups:
+      prod:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "@mdn/*"
+      dev:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "@mdn/*"
 
   - package-ecosystem: npm
     directory: "/lib/locale-utils"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    groups:
+      prod:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "@mdn/*"
+      dev:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "@mdn/*"
 
   - package-ecosystem: npm
     directory: "/lib/pong"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    groups:
+      prod:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "@mdn/*"
+      dev:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "@mdn/*"
 
   - package-ecosystem: npm
     directory: "/lib/slug-utils"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    groups:
+      prod:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "@mdn/*"
+      dev:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "@mdn/*"
 
     # This forces the Dependabot commit messages to conform to something
     # our auto-merge workflow can always cope with.
