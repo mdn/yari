@@ -94,7 +94,7 @@ updates:
           - "@mdn/*"
 
   - package-ecosystem: npm
-    directory: "/lib/locale-utils"
+    directory: "/libs/locale-utils"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
@@ -115,7 +115,7 @@ updates:
           - "@mdn/*"
 
   - package-ecosystem: npm
-    directory: "/lib/pong"
+    directory: "/libs/pong"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
@@ -136,7 +136,7 @@ updates:
           - "@mdn/*"
 
   - package-ecosystem: npm
-    directory: "/lib/slug-utils"
+    directory: "/libs/slug-utils"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
