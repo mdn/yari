@@ -44,7 +44,7 @@
     "sanitize-filename": "^1.6.3"
   },
   "devDependencies": {
-    "@swc/core": "^1.11.22",
+    "@swc/core": "^1.13.5",
     "@types/accept-language-parser": "^1.5.7",
     "@types/cookie-parser": "^1.4.7",
     "@types/http-proxy": "^1.17.16",
