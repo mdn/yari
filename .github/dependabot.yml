@@ -4,7 +4,7 @@ updates:
   - package-ecosystem: npm
     directory: "/"
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 35
     groups:
       prod:
@@ -25,12 +25,12 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: weekly
 
   - package-ecosystem: "pip"
     directory: "/deployer"
     schedule:
-      interval: "weekly"
+      interval: weekly
     groups:
       dependencies:
         patterns:
@@ -42,7 +42,7 @@ updates:
   - package-ecosystem: "pip"
     directory: "/testing/integration"
     schedule:
-      interval: "weekly"
+      interval: weekly
     groups:
       dependencies:
         patterns:
@@ -54,7 +54,7 @@ updates:
   - package-ecosystem: npm
     directory: "/client/pwa"
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 10
     groups:
       prod:
@@ -75,7 +75,7 @@ updates:
   - package-ecosystem: npm
     directory: "/cloud-function"
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 10
     groups:
       prod:
@@ -96,7 +96,7 @@ updates:
   - package-ecosystem: npm
     directory: "/libs/locale-utils"
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 10
     groups:
       prod:
@@ -117,7 +117,7 @@ updates:
   - package-ecosystem: npm
     directory: "/libs/pong"
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 10
     groups:
       prod:
@@ -138,7 +138,7 @@ updates:
   - package-ecosystem: npm
     directory: "/libs/slug-utils"
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 10
     groups:
       prod:
