@@ -73,6 +73,9 @@ jobs:
     environment: stage
     runs-on: ubuntu-latest
 
+    # We only ever want to deploy the `next` branch to stage.
+    if: ${{ github.repository == 'mdn/yari' && github.ref_name == 'next' }}
+
     steps:
       # Our usecase is a bit complicated. When the cron schedule runs this workflow,
       # we rely on the env vars defined at the top of the file. But if it's a manual
