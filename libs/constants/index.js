@@ -85,9 +85,9 @@ export const CSP_SCRIPT_SRC_VALUES = [
 
   // 1. `entry.inline.js`
   // - Previous hash (to avoid cache invalidation issues):
-  "'sha256-YCNoU9DNiinACbd8n6UPyB/8vj0kXvhkOni9/06SuYw='",
+  "'sha256-XNBp89FG76amD8BqrJzyflxOF9PaWPqPqvJfKZPCv7M='",
   // - Current hash:
-  "'sha256-NDybBb51I8NqtfjL2Sht/WVOtGSUWYZ4IK8tYdqRljo='",
+  "'sha256-YCNoU9DNiinACbd8n6UPyB/8vj0kXvhkOni9/06SuYw='",
 ];
 export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
