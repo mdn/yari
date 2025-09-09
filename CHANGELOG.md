@@ -1,5 +1,19 @@
 # Changelog
 
+## [5.1.1](https://github.com/mdn/yari/compare/v5.1.0...v5.1.1) (2025-09-09)
+
+
+### Miscellaneous
+
+* **deps-dev:** bump @babel/core from 7.28.3 to 7.28.4 ([#13475](https://github.com/mdn/yari/issues/13475)) ([7d35008](https://github.com/mdn/yari/commit/7d3500835757b3b04bc497b0e41ec7583d25e5f6))
+* **deps-dev:** bump @babel/eslint-parser from 7.28.0 to 7.28.4 ([#13477](https://github.com/mdn/yari/issues/13477)) ([718362a](https://github.com/mdn/yari/commit/718362afdb3bf825cdd815276adb21328f4b6c3a))
+* **deps-dev:** bump lefthook from 1.12.3 to 1.12.4 ([#13474](https://github.com/mdn/yari/issues/13474)) ([675f4f8](https://github.com/mdn/yari/commit/675f4f8bdbef5501cf4802cacbeb573905854c82))
+* **deps-dev:** bump pytest from 8.4.1 to 8.4.2 in /deployer in the dependencies group ([#13470](https://github.com/mdn/yari/issues/13470)) ([faaab2b](https://github.com/mdn/yari/commit/faaab2b949a1b9fa73a3e090adce0e90be0db78e))
+* **deps-dev:** bump sass from 1.92.0 to 1.92.1 ([#13476](https://github.com/mdn/yari/issues/13476)) ([0c8665a](https://github.com/mdn/yari/commit/0c8665a81950ef1f14617278c5fc435a961e2c43))
+* **deps:** bump @mdn/rari from 0.1.48 to 0.1.49 ([#13488](https://github.com/mdn/yari/issues/13488)) ([4c54f1b](https://github.com/mdn/yari/commit/4c54f1b45e3d4848242042805204f488a7524fa5))
+* **deps:** bump pytest from 8.4.1 to 8.4.2 in /testing/integration in the dependencies group ([#13472](https://github.com/mdn/yari/issues/13472)) ([00d39b1](https://github.com/mdn/yari/commit/00d39b1d420a56bcb466dfb203fdbb4da703a928))
+* update CSP hash for fred entry.inline.js ([#13443](https://github.com/mdn/yari/issues/13443)) ([cf0a652](https://github.com/mdn/yari/commit/cf0a65236d476fd5e35880f9d136e9b1c1b4e5b2))
+
 ## [5.1.0](https://github.com/mdn/yari/compare/v5.0.3...v5.1.0) (2025-09-05)
 
 
