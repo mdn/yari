@@ -92,6 +92,7 @@ export function setContentResponseHeaders(
   { csp = true, xFrame = true }: { csp?: boolean; xFrame?: boolean }
 ): void {
   [
+    ["Referrer-Policy", "strict-origin-when-cross-origin"],
     ["X-Content-Type-Options", "nosniff"],
     ["Strict-Transport-Security", "max-age=63072000"],
     ...(csp ? [["Content-Security-Policy", CSP_VALUE]] : []),
