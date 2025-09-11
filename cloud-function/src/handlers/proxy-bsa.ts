@@ -66,6 +66,7 @@ export async function proxyBSA(req: Request, res: Response) {
       );
       if (location && (status === 301 || status === 302)) {
         res.setHeader("Referrer-Policy", "no-referrer");
+        res.setHeader("X-Robots-Tag", "noindex, nofollow");
         return res.redirect(location);
       } else {
         return res.sendStatus(502).end();
