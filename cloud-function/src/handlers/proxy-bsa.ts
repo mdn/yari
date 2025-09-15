@@ -57,6 +57,21 @@ export async function proxyBSA(req: Request, res: Response) {
     if (req.method !== "GET") {
       return res.sendStatus(405).end();
     }
+
+    const referer = req.get("referer");
+    if (!referer) {
+      console.warn("[pong/click] Missing Referer (expected MDN host)");
+      return res.sendStatus(400).end();
+    }
+
+    const refererUrl = new URL(referer);
+    if (refererUrl.host != parsedUrl.host) {
+      console.warn(
+        `[pong/click] Disallowed Referer (expected MDN host, was ${JSON.stringify(referer)})`
+      );
+      return res.sendStatus(400).end();
+    }
+
     const params = new URLSearchParams(search);
     try {
       const { status, location } = await handleClick(
@@ -69,7 +84,7 @@ export async function proxyBSA(req: Request, res: Response) {
         res.setHeader("X-Robots-Tag", "noindex, nofollow");
         return res.redirect(location);
       } else {
-        return res.sendStatus(502).end();
+        return res.sendStatus(status ?? 502).end();
       }
     } catch (e) {
       console.error(e);
