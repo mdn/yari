@@ -101,6 +101,10 @@ export async function proxyBSA(req: Request, res: Response) {
       console.error(e);
     }
   } else if (pathname.startsWith("/pimg/")) {
+    if (req.method !== "GET") {
+      return res.sendStatus(405).end();
+    }
+
     const src = coder.decodeAndVerify(
       decodeURIComponent(pathname.substring("/pimg/".length))
     );
