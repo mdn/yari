@@ -105,6 +105,20 @@ export async function proxyBSA(req: Request, res: Response) {
       return res.sendStatus(405).end();
     }
 
+    const referer = req.get("referer");
+    if (!referer) {
+      console.warn("[pimg] Missing Referer (expected MDN host)");
+      return res.sendStatus(400).end();
+    }
+
+    const refererUrl = new URL(referer);
+    if (refererUrl.host != parsedUrl.host) {
+      console.warn(
+        `[pimg] Disallowed Referer (expected MDN host, was ${JSON.stringify(referer)})`
+      );
+      return res.sendStatus(400).end();
+    }
+
     const src = coder.decodeAndVerify(
       decodeURIComponent(pathname.substring("/pimg/".length))
     );
