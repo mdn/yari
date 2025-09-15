@@ -122,10 +122,25 @@ export async function proxyBSA(req: Request, res: Response) {
     const src = coder.decodeAndVerify(
       decodeURIComponent(pathname.substring("/pimg/".length))
     );
+
     if (!src) {
+      console.warn("[pimg] Invalid src");
       return res.sendStatus(400).end();
     }
-    const { buf, contentType } = await fetchImage(src);
+
+    const { status, buf, contentType } = await fetchImage(src);
+
+    if (status > 400) {
+      console.warn(`[pimg] Image fetch failed: HTTP ${status}`);
+      return res
+        .status(status)
+        .set({
+          "cache-control": "no-store",
+          "content-type": contentType,
+        })
+        .end(Buffer.from(buf));
+    }
+
     return res
       .status(200)
       .set({
