@@ -113,6 +113,7 @@ export async function proxyBSA(req: Request, res: Response) {
       .set({
         "cache-control": "max-age=86400",
         "content-type": contentType,
+        "x-robots-tag": "noindex, nofollow",
       })
       .end(Buffer.from(buf));
   }
