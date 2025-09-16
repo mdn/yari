@@ -116,7 +116,7 @@ export async function proxyBSA(req: Request, res: Response) {
 
     const { status, buf, contentType } = await fetchImage(src);
 
-    if (status > 400) {
+    if (status >= 400) {
       console.warn(`[pimg] Image fetch failed: HTTP ${status}`);
       return res
         .status(status)
