@@ -297,10 +297,22 @@ export function createPong2GetHandler(zoneKeys, coder) {
 
 export function createPong2ClickHandler(coder) {
   return async (params, countryCode, userAgent) => {
-    const click = coder.decodeAndVerify(params.get("code"));
+    const code = params.get("code");
+
+    if (!code) {
+      console.warn("[pong/click] Missing code parameter");
+      return {
+        status: 400,
+      };
+    }
+
+    const click = coder.decodeAndVerify(code);
 
     if (!click) {
-      return {};
+      console.warn("[pong/click] Invalid code value");
+      return {
+        status: 404,
+      };
     }
 
     const anonymousIp = anonymousIpByCC(countryCode);
@@ -320,7 +332,16 @@ export function createPong2ClickHandler(coder) {
 
 export function createPong2ViewedHandler(coder) {
   return async (params, countryCode, userAgent) => {
-    const view = coder.decodeAndVerify(params.get("code"));
+    const code = params.get("code");
+
+    if (!code) {
+      console.warn("[pong/viewed] Missing code parameter");
+      return {
+        status: 400,
+      };
+    }
+
+    const view = coder.decodeAndVerify(code);
     if (view) {
       const anonymousIp = anonymousIpByCC(countryCode);
       const viewURL = createURL(view);
