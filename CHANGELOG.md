@@ -1,5 +1,19 @@
 # Changelog
 
+## [5.1.2](https://github.com/mdn/yari/compare/v5.1.1...v5.1.2) (2025-09-17)
+
+
+### Miscellaneous
+
+* **cloud-function:** send `X-Robots-Tag: noindex` on pimg ([#13503](https://github.com/mdn/yari/issues/13503)) ([517fed4](https://github.com/mdn/yari/commit/517fed44762d2af70f0bfd750125aaba0e48dfd4))
+* **cloud-function:** set "Referrer-Policy: no-referrer" on ad clicks ([#13496](https://github.com/mdn/yari/issues/13496)) ([f6a4a35](https://github.com/mdn/yari/commit/f6a4a3541bcff180d411724e682c864ce6f40cb7))
+* **cloud-function:** set "X-Robots-Tag: noindex, nofollow" on ad clicks ([#13497](https://github.com/mdn/yari/issues/13497)) ([9db77ff](https://github.com/mdn/yari/commit/9db77ff66c62305d2bcdf7c5819fb71508b35032))
+* **cloud-function:** set Referrer-Policy explicitly ([#13489](https://github.com/mdn/yari/issues/13489)) ([b102a3d](https://github.com/mdn/yari/commit/b102a3dc5b577d3f24f0864963110821ec94717c))
+* **dependabot:** reduce interval, add groups, fix directory ([#13478](https://github.com/mdn/yari/issues/13478)) ([8bd92b2](https://github.com/mdn/yari/commit/8bd92b23edffe2531bd0d201035c7df416200941))
+* **deps:** bump @adzerk/decision-sdk from 1.0.0-beta.20 to 1.0.0-beta.27 in /libs/pong ([#13493](https://github.com/mdn/yari/issues/13493)) ([f27debf](https://github.com/mdn/yari/commit/f27debfcaa18a706331662aef82fee68cb869024))
+* **deps:** relax @mdn/rari version range ([#13490](https://github.com/mdn/yari/issues/13490)) ([861351f](https://github.com/mdn/yari/commit/861351f45c3fd5e1cf47b57d9185980b9c0f3080))
+* **pong:** filter clicks by referer + missing code param ([#13499](https://github.com/mdn/yari/issues/13499)) ([41b7111](https://github.com/mdn/yari/commit/41b711162c8b6d390c2dff5b43aab66d331bc793))
+
 ## [5.1.1](https://github.com/mdn/yari/compare/v5.1.0...v5.1.1) (2025-09-09)
 
 
