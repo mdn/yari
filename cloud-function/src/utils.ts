@@ -41,7 +41,7 @@ export function redirect(
     newLocation += `?${querystring}`;
   }
 
-  res.set("Cache-Control", cacheControlValue).redirect(status, newLocation);
+  res.set("Cache-Control", cacheControlValue).redirect(newLocation, status);
 }
 
 export function isLiveSampleURL(url: string) {
