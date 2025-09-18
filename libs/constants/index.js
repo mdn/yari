@@ -88,6 +88,11 @@ export const CSP_SCRIPT_SRC_VALUES = [
   "'sha256-XNBp89FG76amD8BqrJzyflxOF9PaWPqPqvJfKZPCv7M='",
   // - Current hash:
   "'sha256-YCNoU9DNiinACbd8n6UPyB/8vj0kXvhkOni9/06SuYw='",
+  // 2. `components/baseline-indicator/inline.js`
+  // - Previous hash (to avoid cache invalidation issues):
+  // null
+  // - Current hash:
+  "'sha256-PZjP7OR6mBEtnvXIZfCZ5PuOlxoDF1LDZL8aj8c42rw=''",
 ];
 export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
