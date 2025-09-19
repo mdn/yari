@@ -92,7 +92,7 @@ export const CSP_SCRIPT_SRC_VALUES = [
   // - Previous hash (to avoid cache invalidation issues):
   // null
   // - Current hash:
-  "'sha256-PZjP7OR6mBEtnvXIZfCZ5PuOlxoDF1LDZL8aj8c42rw=''",
+  "'sha256-PZjP7OR6mBEtnvXIZfCZ5PuOlxoDF1LDZL8aj8c42rw='",
 ];
 export const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
