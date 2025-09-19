@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.1.3](https://github.com/mdn/yari/compare/v5.1.2...v5.1.3) (2025-09-19)
+
+
+### Miscellaneous
+
+* **csp:** add hash for baseline indicator inline js ([#13505](https://github.com/mdn/yari/issues/13505)) ([0995e33](https://github.com/mdn/yari/commit/0995e3345f3e67af0732b487dd73f89ad531398d))
+* **csp:** fix typo in baseline indicator inline js hash ([#13507](https://github.com/mdn/yari/issues/13507)) ([7975830](https://github.com/mdn/yari/commit/79758309370250e2388821474edd9e5278aef5d1))
+
 ## [5.1.2](https://github.com/mdn/yari/compare/v5.1.1...v5.1.2) (2025-09-17)
 
 
