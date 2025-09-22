@@ -9,7 +9,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-click = "^8.2.1"
+click = "^8.3.0"
 python-decouple = "^3.8"
 elasticsearch-dsl = "^7.4.1"
 selectolax = "^0.3.34"
@@ -18,7 +18,7 @@ selectolax = "^0.3.34"
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-black = "^25.1"
+black = "^25.9"
 flake8 = "^7.3.0"
 pytest = "^8.4.2"
 
