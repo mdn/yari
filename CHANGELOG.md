@@ -1,5 +1,15 @@
 # Changelog
 
+## [5.1.3](https://github.com/mdn/yari/compare/v5.1.2...v5.1.3) (2025-09-22)
+
+
+### Miscellaneous
+
+* **csp:** add hash for baseline indicator inline js ([#13505](https://github.com/mdn/yari/issues/13505)) ([0995e33](https://github.com/mdn/yari/commit/0995e3345f3e67af0732b487dd73f89ad531398d))
+* **csp:** fix typo in baseline indicator inline js hash ([#13507](https://github.com/mdn/yari/issues/13507)) ([7975830](https://github.com/mdn/yari/commit/79758309370250e2388821474edd9e5278aef5d1))
+* **deps-dev:** bump black from 25.1.0 to 25.9.0 in /testing/integration in the dependencies group ([#13511](https://github.com/mdn/yari/issues/13511)) ([0cfdd1b](https://github.com/mdn/yari/commit/0cfdd1b8445c0c6983ff4f2ce6375ae32308047a))
+* **deps:** bump the dependencies group in /deployer with 2 updates ([#13512](https://github.com/mdn/yari/issues/13512)) ([de43d14](https://github.com/mdn/yari/commit/de43d141dee266b0a4b78e9eaaba7f6f0941b953))
+
 ## [5.1.2](https://github.com/mdn/yari/compare/v5.1.1...v5.1.2) (2025-09-17)
 
 
