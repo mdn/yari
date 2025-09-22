@@ -38,14 +38,26 @@ const UIContext = React.createContext<UIStatus>({
   setHighlightedQueueExample: () => {},
 });
 
+function getInitailTheme(): Theme {
+  try {
+    const theme = window.localStorage.getItem("theme") as Theme;
+    if (["dark", "light", "os-default"].includes(theme)) {
+      return theme;
+    }
+  } catch (e) {
+    console.warn(
+      "Unable to read 'theme' from localStorage, defaulting to OS theme preference."
+    );
+  }
+  return "os-default";
+}
+
 export function UIProvider(props: any) {
-  const initialTheme = window.localStorage.getItem("theme");
+  const initialTheme = getInitailTheme();
   const [mobileOverlays, setMobileOverlays] = useState<Set<Overlay>>(new Set());
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [toastData, setToastData] = useState<ToastData | null>(null);
-  const [colorScheme, setColorScheme] = useState<Theme>(
-    (initialTheme as Theme) || "os-default"
-  );
+  const [colorScheme, setColorScheme] = useState<Theme>(initialTheme);
   const [queuedExamples, setQueuedExamples] = useState<Set<string>>(new Set());
   const [queue, setQueue] = useState<QueueEntry[]>([]);
   const [highlightedQueueExample, setHighlightedQueueExample] = useState<
