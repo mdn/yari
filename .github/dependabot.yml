@@ -1,8 +1,7 @@
 version: 2
-
 updates:
   - package-ecosystem: npm
-    directory: "/"
+    directory: /
     schedule:
       interval: weekly
     open-pull-requests-limit: 35
@@ -21,26 +20,14 @@ updates:
           - patch
         exclude-patterns:
           - "@mdn/*"
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
       interval: weekly
-
-  - package-ecosystem: "pip"
-    directory: "/deployer"
-    schedule:
-      interval: weekly
-    groups:
-      dependencies:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-
-  - package-ecosystem: "pip"
-    directory: "/testing/integration"
+    commit-message:
+      prefix: "ci(deps): "
+  - package-ecosystem: pip
+    directory: /deployer
     schedule:
       interval: weekly
     groups:
@@ -48,11 +35,21 @@ updates:
         patterns:
           - "*"
         update-types:
-          - "minor"
-          - "patch"
-
+          - minor
+          - patch
+  - package-ecosystem: pip
+    directory: /testing/integration
+    schedule:
+      interval: weekly
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
   - package-ecosystem: npm
-    directory: "/client/pwa"
+    directory: /client/pwa
     schedule:
       interval: weekly
     open-pull-requests-limit: 10
@@ -71,9 +68,8 @@ updates:
           - patch
         exclude-patterns:
           - "@mdn/*"
-
   - package-ecosystem: npm
-    directory: "/cloud-function"
+    directory: /cloud-function
     schedule:
       interval: weekly
     open-pull-requests-limit: 10
@@ -92,9 +88,8 @@ updates:
           - patch
         exclude-patterns:
           - "@mdn/*"
-
   - package-ecosystem: npm
-    directory: "/libs/locale-utils"
+    directory: /libs/locale-utils
     schedule:
       interval: weekly
     open-pull-requests-limit: 10
@@ -113,9 +108,8 @@ updates:
           - patch
         exclude-patterns:
           - "@mdn/*"
-
   - package-ecosystem: npm
-    directory: "/libs/pong"
+    directory: /libs/pong
     schedule:
       interval: weekly
     open-pull-requests-limit: 10
@@ -134,9 +128,8 @@ updates:
           - patch
         exclude-patterns:
           - "@mdn/*"
-
   - package-ecosystem: npm
-    directory: "/libs/slug-utils"
+    directory: /libs/slug-utils
     schedule:
       interval: weekly
     open-pull-requests-limit: 10
@@ -155,10 +148,6 @@ updates:
           - patch
         exclude-patterns:
           - "@mdn/*"
-
-    # This forces the Dependabot commit messages to conform to something
-    # our auto-merge workflow can always cope with.
-    # See https://github.com/ahmadnassri/action-dependabot-auto-merge/issues/31#issuecomment-718779806
     commit-message:
       prefix: build
       prefix-development: chore
