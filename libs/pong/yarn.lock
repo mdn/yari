@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@adzerk/api-decision-js/-/api-decision-js-1.0.23.tgz#2908449f3e149ffec63833793188d49ac25a9ba6"
   integrity sha512-oThjqykHOloX05F4g1epA8+AIJbT4B3USlMWbzoUW7ZA7573Gtmq6JgCm05p5/4QSWcbkJrQ14FgqqzychL8+Q==
 
-"@adzerk/decision-sdk@^1.0.0-beta.27":
-  version "1.0.0-beta.27"
-  resolved "https://registry.yarnpkg.com/@adzerk/decision-sdk/-/decision-sdk-1.0.0-beta.27.tgz#e2563c7a460e8fb16232062925d0e40e42d5651c"
-  integrity sha512-KnTDmUiKZL+pEPCd7Nkfi+bMhRHjjWh4X3WWc4yKWkh3Sd19FyVDdCdwRUQUpKsv548bmJp2OxQyqV4hLG/0BQ==
+"@adzerk/decision-sdk@^1.0.0-beta.28":
+  version "1.0.0-beta.28"
+  resolved "https://registry.yarnpkg.com/@adzerk/decision-sdk/-/decision-sdk-1.0.0-beta.28.tgz#c6f9667c27376fe8913843b154b74c14b220553b"
+  integrity sha512-zRoJK+JeykialMPa3PxwZogKhP4NSgQoQV/nisj2eWnBf5XhKNo+tn1bMTBFAwCw23Ayyi+7eo5WfFyXWipisg==
   dependencies:
     "@adzerk/api-decision-js" "^1.0.10"
     debug "^4.1.1"
