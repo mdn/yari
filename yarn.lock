@@ -12087,10 +12087,10 @@ open@^10.0.3, open@^10.1.0, open@^10.2.0:
     is-inside-container "^1.0.0"
     wsl-utils "^0.1.0"
 
-openai@^5.18.1:
-  version "5.18.1"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-5.18.1.tgz#1c4884aefcada7ec684771e03c860c381f1902c1"
-  integrity sha512-iXSOfLlOL+jgnFr5CGrB2SEZw5C92o1nrFW2SasoAXj4QxGhfeJPgg8zkX+vaCfX80cT6CWjgaGnq7z9XzbyRw==
+openai@^6.5.0:
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-6.5.0.tgz#7dd9c4c0ca6e394c1d1e738b2000e084024685b2"
+  integrity sha512-bNqJ15Ijbs41KuJ2iYz/mGAruFHzQQt7zXo4EvjNLoB64aJdgn1jlMeDTsXjEg+idVYafg57QB/5Rd16oqvZ6A==
 
 opener@^1.5.2:
   version "1.5.2"
