@@ -37,7 +37,7 @@ jobs:
           ANALYZE_BUNDLE_PR: true
 
       - name: Upload stats.json
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: head-stats
           path: ./client/build/stats.json
@@ -72,7 +72,7 @@ jobs:
           ANALYZE_BUNDLE_PR: true
 
       - name: Upload stats.json
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: base-stats
           path: ./client/build/stats.json
