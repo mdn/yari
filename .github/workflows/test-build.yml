@@ -201,7 +201,7 @@ jobs:
 
       - name: Cache Cargo registry
         if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.cargo/registry/index/
