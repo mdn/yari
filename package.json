@@ -158,7 +158,7 @@
     "remark-rehype": "^11.1.2",
     "remark-stringify": "^11.0.0",
     "sanitize-filename": "^1.6.3",
-    "send": "^1.2.0",
+    "send": "^1.2.1",
     "source-map-support": "^0.5.21",
     "sse.js": "^2.7.0",
     "swr": "^2.3.6",
