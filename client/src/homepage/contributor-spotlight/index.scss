@@ -83,8 +83,10 @@
     font-size: 1.5rem;
     font-weight: 650;
     line-height: 1.4;
+    overflow-wrap: break-word;
     text-transform: uppercase;
     width: fit-content;
+    word-break: break-word;
 
     &::after,
     &::before {
