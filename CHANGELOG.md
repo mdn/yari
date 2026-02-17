@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.1.3](https://github.com/mdn/yari/compare/v5.1.2...v5.1.3) (2026-02-17)
+
+
+### Miscellaneous
+
+* **csp:** add hash for baseline indicator inline js ([#13505](https://github.com/mdn/yari/issues/13505)) ([0995e33](https://github.com/mdn/yari/commit/0995e3345f3e67af0732b487dd73f89ad531398d))
+* **csp:** fix typo in baseline indicator inline js hash ([#13507](https://github.com/mdn/yari/issues/13507)) ([7975830](https://github.com/mdn/yari/commit/79758309370250e2388821474edd9e5278aef5d1))
+* **deps-dev:** bump black from 25.1.0 to 25.9.0 in /testing/integration in the dependencies group ([#13511](https://github.com/mdn/yari/issues/13511)) ([0cfdd1b](https://github.com/mdn/yari/commit/0cfdd1b8445c0c6983ff4f2ce6375ae32308047a))
+* **deps:** bump @adzerk/decision-sdk from 1.0.0-beta.27 to 1.0.0-beta.28 in /libs/pong ([#13548](https://github.com/mdn/yari/issues/13548)) ([4e5a00e](https://github.com/mdn/yari/commit/4e5a00ed9a72f5534d9e818298f76a0c5c2e6970))
+* **deps:** bump the dependencies group in /deployer with 2 updates ([#13512](https://github.com/mdn/yari/issues/13512)) ([de43d14](https://github.com/mdn/yari/commit/de43d141dee266b0a4b78e9eaaba7f6f0941b953))
+* **github:** update CODEOWNERS ([#13608](https://github.com/mdn/yari/issues/13608)) ([3d6a8ad](https://github.com/mdn/yari/commit/3d6a8ade29a3e2d324341f7ab56b75cb59a67def))
+
 ## [5.1.2](https://github.com/mdn/yari/compare/v5.1.1...v5.1.2) (2025-09-17)
 
 
