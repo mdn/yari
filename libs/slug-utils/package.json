@@ -7,7 +7,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "dependencies": {
-    "sanitize-filename": "^1.6.3"
+    "sanitize-filename": "^1.6.4"
   },
   "export": "./index.js"
 }
