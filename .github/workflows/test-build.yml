@@ -214,7 +214,7 @@ jobs:
 
       - name: sccache-cache
         if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
-        uses: mozilla-actions/sccache-action@v0.0.9
+        uses: mozilla-actions/sccache-action@v0.0.10
 
       - name: Build rari
         if: ${{ !( vars.SKIP_BUILD || github.event.inputs.rari-ref == '' ) }}
