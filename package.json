@@ -84,7 +84,7 @@
     "@inquirer/prompts": "^7.8.4",
     "@lit/react": "^1.0.8",
     "@lit/task": "^1.0.3",
-    "@mdn/bcd-utils-api": "^0.0.8",
+    "@mdn/bcd-utils-api": "^0.0.10",
     "@mdn/browser-compat-data": "^6.0.28",
     "@mdn/minimalist": "^2.0.4",
     "@mdn/rari": "^0.1.49",
