@@ -265,7 +265,7 @@
     "stylelint-a11y": "^1.2.3",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-recommended-scss": "^13.1.0",
-    "stylelint-config-sass-guidelines": "^10.0.0",
+    "stylelint-config-sass-guidelines": "^13.0.0",
     "stylelint-order": "^6.0.4",
     "stylelint-prettier": "^4.1.0",
     "stylelint-scss": "^5.3.2",
