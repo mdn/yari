@@ -11,14 +11,18 @@ on:
         required: true
         type: string
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
-  build:
+  release:
     if: github.repository == 'mdn/yari'
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
 
     steps:
       - name: Release
@@ -26,11 +30,19 @@ jobs:
         uses: googleapis/release-please-action@v4
         id: release
 
+  publish:
+    needs: release
+    if: needs.release.outputs.release_created || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
       - name: Checkout
         uses: actions/checkout@v5
-        if: steps.release.outputs.release_created || github.event_name == 'workflow_dispatch'
         with:
-          ref: ${{ inputs.tag || github.sha }}
+          ref: ${{ inputs.tag || needs.release.outputs.tag_name }}
 
       - name: Validate manual publish
         if: github.event_name == 'workflow_dispatch'
@@ -42,19 +54,16 @@ jobs:
 
       - name: Setup
         uses: actions/setup-node@v4
-        if: steps.release.outputs.release_created || github.event_name == 'workflow_dispatch'
         with:
           node-version-file: ".nvmrc"
           registry-url: "https://registry.npmjs.org"
 
       - name: Install
-        if: steps.release.outputs.release_created || github.event_name == 'workflow_dispatch'
         run: yarn --frozen-lockfile
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
-        if: steps.release.outputs.release_created || github.event_name == 'workflow_dispatch'
         env:
           # What this does is it makes sure the built client is made for
           # doing CRUD work (e.g. previewing, toolbar, flaws UI, etc)
@@ -77,7 +86,6 @@ jobs:
         run: yarn build:legacy:prepare
 
       - name: Publish
-        if: steps.release.outputs.release_created || github.event_name == 'workflow_dispatch'
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
