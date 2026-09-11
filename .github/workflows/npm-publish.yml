@@ -4,40 +4,64 @@ on:
   push:
     branches:
       - main
-
-permissions:
-  contents: write
-  pull-requests: write
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag to publish"
+        required: true
+        type: string
 
 jobs:
-  build:
+  release:
     if: github.repository == 'mdn/yari'
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+      pull-requests: write
+
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+
     steps:
       - name: Release
+        if: github.event_name == 'push'
         uses: googleapis/release-please-action@v4
         id: release
 
+  publish:
+    needs: release
+    if: needs.release.outputs.release_created || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
       - name: Checkout
         uses: actions/checkout@v5
-        if: steps.release.outputs.release_created
+        with:
+          ref: ${{ inputs.tag || needs.release.outputs.tag_name }}
+
+      - name: Validate
+        env:
+          PUBLISH_TAG: ${{ inputs.tag || needs.release.outputs.tag_name }}
+        run: |
+          test "v$(node -p "require('./package.json').version")" = "$PUBLISH_TAG"
 
       - name: Setup
         uses: actions/setup-node@v4
-        if: steps.release.outputs.release_created
         with:
           node-version-file: ".nvmrc"
           registry-url: "https://registry.npmjs.org"
 
       - name: Install
-        if: steps.release.outputs.release_created
         run: yarn --frozen-lockfile
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
-        if: steps.release.outputs.release_created
         env:
           # What this does is it makes sure the built client is made for
           # doing CRUD work (e.g. previewing, toolbar, flaws UI, etc)
@@ -60,7 +84,6 @@ jobs:
         run: yarn build:legacy:prepare
 
       - name: Publish
-        if: steps.release.outputs.release_created
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
