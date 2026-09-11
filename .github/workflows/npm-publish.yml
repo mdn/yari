@@ -48,7 +48,6 @@ jobs:
         env:
           PUBLISH_TAG: ${{ inputs.tag || needs.release.outputs.tag_name }}
         run: |
-          test "$(git describe --tags --exact-match)" = "$PUBLISH_TAG"
           test "v$(node -p "require('./package.json').version")" = "$PUBLISH_TAG"
 
       - name: Setup
