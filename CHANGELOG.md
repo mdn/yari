@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.0.1](https://github.com/mdn/yari/compare/v6.0.0...v6.0.1) (2026-09-11)
+
+
+### Miscellaneous
+
+* **telemetry:** renew metrics ([#13676](https://github.com/mdn/yari/issues/13676)) ([2dcd26d](https://github.com/mdn/yari/commit/2dcd26d02b9c67bf511ec469c6bb949acd72bdbe))
+
 ## [6.0.0](https://github.com/mdn/yari/compare/v5.1.2...v6.0.0) (2026-09-11)
 
 
