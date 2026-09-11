@@ -19,7 +19,7 @@ page:
       - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2026-09-05
+    expires: 2027-09-05
   referrer:
     type: url
     lifetime: application
@@ -36,7 +36,7 @@ page:
       - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2026-09-05
+    expires: 2027-09-05
   utm:
     type: labeled_string
     lifetime: application
@@ -58,7 +58,7 @@ page:
       - "https://bugzilla.mozilla.org/show_bug.cgi?id=1851150"
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2026-09-05
+    expires: 2027-09-05
     labels:
       - source
       - medium
@@ -83,7 +83,7 @@ navigator:
       - https://github.com/mdn/yari/pull/7457#issuecomment-1296934544
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2026-09-05
+    expires: 2027-09-05
   geo_iso:
     type: string
     lifetime: application
@@ -100,7 +100,7 @@ navigator:
       - https://github.com/mdn/yari/pull/7457#issuecomment-1296934544
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2026-09-05
+    expires: 2027-09-05
   subscription_type:
     type: string
     lifetime: application
@@ -118,7 +118,7 @@ navigator:
       - https://github.com/mdn/yari/pull/7457#issuecomment-1296934544
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2026-09-05
+    expires: 2027-09-05
 
 element:
   clicked:
@@ -136,7 +136,7 @@ element:
       - https://github.com/mdn/yari/pull/6813#issuecomment-1203705308
     notification_emails:
       - mdn-team@mozilla.com
-    expires: 2026-09-05
+    expires: 2027-09-05
     extra_keys:
       source:
         description: |
