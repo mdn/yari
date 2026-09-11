@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag to publish"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -16,28 +22,39 @@ jobs:
 
     steps:
       - name: Release
+        if: github.event_name == 'push'
         uses: googleapis/release-please-action@v4
         id: release
 
       - name: Checkout
         uses: actions/checkout@v5
-        if: steps.release.outputs.release_created
+        if: steps.release.outputs.release_created || github.event_name == 'workflow_dispatch'
+        with:
+          ref: ${{ inputs.tag || github.sha }}
+
+      - name: Validate manual publish
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          PUBLISH_TAG: ${{ inputs.tag }}
+        run: |
+          test "$(git describe --tags --exact-match)" = "$PUBLISH_TAG"
+          test "v$(node -p "require('./package.json').version")" = "$PUBLISH_TAG"
 
       - name: Setup
         uses: actions/setup-node@v4
-        if: steps.release.outputs.release_created
+        if: steps.release.outputs.release_created || github.event_name == 'workflow_dispatch'
         with:
           node-version-file: ".nvmrc"
           registry-url: "https://registry.npmjs.org"
 
       - name: Install
-        if: steps.release.outputs.release_created
+        if: steps.release.outputs.release_created || github.event_name == 'workflow_dispatch'
         run: yarn --frozen-lockfile
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
-        if: steps.release.outputs.release_created
+        if: steps.release.outputs.release_created || github.event_name == 'workflow_dispatch'
         env:
           # What this does is it makes sure the built client is made for
           # doing CRUD work (e.g. previewing, toolbar, flaws UI, etc)
@@ -60,7 +77,7 @@ jobs:
         run: yarn build:legacy:prepare
 
       - name: Publish
-        if: steps.release.outputs.release_created
+        if: steps.release.outputs.release_created || github.event_name == 'workflow_dispatch'
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
