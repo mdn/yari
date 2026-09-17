@@ -6,6 +6,9 @@ Yari (`@mdn/yari`) is a source-only package for
 Fred imports and bundles Yari's source for MDN Plus and the full Yari app for
 offline support. Fred handles building and serving these features.
 
+For documentation from before Yari became source-only, see the
+[historical README for v5.1.2](https://github.com/mdn/yari/blob/v5.1.2/README.md).
+
 For frontend development and setup instructions, see the
 [Fred repository](https://github.com/mdn/fred). To contribute to MDN's content,
 see the [content repository](https://github.com/mdn/content).
