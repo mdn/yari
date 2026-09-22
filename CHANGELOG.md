@@ -1,5 +1,14 @@
 # Changelog
 
+## [6.0.1](https://github.com/mdn/yari/compare/v6.0.0...v6.0.1) (2026-09-17)
+
+
+### Miscellaneous
+
+* **deps:** move downshift to runtime dependencies and align with fred ([#13684](https://github.com/mdn/yari/issues/13684)) ([5031fc3](https://github.com/mdn/yari/commit/5031fc3fc1ff2f95ad05239fdfa39fb0c03a71fe))
+* **deps:** move non-runtime dependencies to devDependencies ([#13683](https://github.com/mdn/yari/issues/13683)) ([e761065](https://github.com/mdn/yari/commit/e76106579e4feeea21bdc56b0306d54fb3e88980))
+* **telemetry:** renew metrics ([#13676](https://github.com/mdn/yari/issues/13676)) ([2dcd26d](https://github.com/mdn/yari/commit/2dcd26d02b9c67bf511ec469c6bb949acd72bdbe))
+
 ## [6.0.0](https://github.com/mdn/yari/compare/v5.1.2...v6.0.0) (2026-09-11)
 
 
