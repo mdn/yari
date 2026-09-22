@@ -23,7 +23,10 @@ export default function UpdateButton({
       break;
 
     case ContentStatusPhase.IDLE:
-      if (updateStatus?.local?.version === updateStatus?.remote?.latest) {
+      if (
+        updateStatus?.local?.version &&
+        updateStatus.local.version === updateStatus?.remote?.latest
+      ) {
         info = "Your content is up to date";
         button = <button disabled>Up to date</button>;
       } else {
