@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.0.2](https://github.com/mdn/yari/compare/v6.0.1...v6.0.2) (2026-10-13)
+
+
+### Miscellaneous
+
+* **deps:** bump he from 1.2.0 to 2.0.0 in /libs/pong ([#13691](https://github.com/mdn/yari/issues/13691)) ([b3f0842](https://github.com/mdn/yari/commit/b3f084271a9bfdb529030504f3fc0db30ccf4612))
+
 ## [6.0.1](https://github.com/mdn/yari/compare/v6.0.0...v6.0.1) (2026-09-17)
 
 
